@@ -47,7 +47,6 @@ def generate_question(level):
 
     if level == 1:
         conversion_start = random.choice(["binary","hexadecimal","octal","decimal"])
-        conversion_start = "octal"
         conversion_end = "binary"
         correct_answer = 0
         
@@ -111,8 +110,10 @@ def main():
     for _ in range(num):
         conversion_start, start_value, conversion_end, correct_answer = generate_question(1)
         user_answer = input(f"What is the {conversion_end} representation of {start_value} (in {conversion_start})? ").strip()
+        UA = str(user_answer)
+        CA = str(correct_answer)
 
-        if user_answer == correct_answer:
+        if UA == CA:
             print("Correct!\n")
         else:
             print(f"Wrong. The correct answer is {correct_answer}.\n")
