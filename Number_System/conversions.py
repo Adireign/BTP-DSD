@@ -43,7 +43,7 @@ def hexadecimal_to_binary(hexadecimal):
     return bin(decimal)[2:]
 
 # takes level as input
-def generate_question(level):
+def generate_question_conversion(level):
 
     if level == 1:
         conversion_start = random.choice(["binary","hexadecimal","octal","decimal"])
@@ -108,7 +108,7 @@ def main():
     num = int(number_of_questions)
     
     for _ in range(num):
-        conversion_start, start_value, conversion_end, correct_answer = generate_question(1)
+        conversion_start, start_value, conversion_end, correct_answer = generate_question_conversion(1)
         user_answer = input(f"What is the {conversion_end} representation of {start_value} (in {conversion_start})? ").strip()
         UA = str(user_answer)
         CA = str(correct_answer)
