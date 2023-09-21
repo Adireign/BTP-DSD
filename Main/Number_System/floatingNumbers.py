@@ -1,26 +1,32 @@
 import random
 import math
+import struct
 
+def binary_to_decimal(binary):
+    return int(binary, 2)
+
+def binary_to_hexadecimal(binary):
+    decimal = binary_to_decimal(binary)
+    return hex(decimal)[2:]
+
+# returns mantissa
 def generate_question_floating_no1():
-    min_decimal = 10**(-86)
-    max_decimal = 10**(86)
+    decimal_number = random.uniform(0, 10)
+    float_representation = struct.unpack('f', struct.pack('f', decimal_number))[0]
+    binary_representation = format(struct.unpack('!I', struct.pack('!f', float_representation))[0], '032b')
 
-    # Find the minimum and maximum binary exponent
-    min_exponent = int(math.floor(math.log2(min_decimal)))
-    max_exponent = int(math.ceil(math.log2(max_decimal)))
-
-    # Calculate the number of bits required for the exponent
-    min_exponent_bits = len(bin(min_exponent)) - 2  # Subtract 2 to remove '0b' prefix
-    max_exponent_bits = len(bin(max_exponent)) - 2
-
-    print(f"Minimum Exponent: {min_exponent}")
-    print(f"Maximum Exponent: {max_exponent}")
-    print(f"Number of Bits Required for Exponent (Min): {min_exponent_bits}")
-    print(f"Number of Bits Required for Exponent (Max): {max_exponent_bits}")
+    # Extract the sign bit, exponent, and mantissa
+    sign_bit = binary_representation[0]
+    exponent = binary_representation[1:9]
+    mantissa = binary_representation[9:]
+    print(f"Random Decimal Number: {decimal_number}")
+    # print(f"Single-Precision Representation: {binary_representation}")
+    mantissa = binary_to_hexadecimal(mantissa)
+    # print(f"Mantissa: 0x{mantissa}")
+    return mantissa
 
 
 # def generate_question_floating_no2():
-    
 
 
 def main():
