@@ -22,11 +22,11 @@ def generate_question_floating_no1():
     print(f"Random Decimal Number: {decimal_number}")
     # print(f"Single-Precision Representation: {binary_representation}")
     mantissa = binary_to_hexadecimal(mantissa)
-    # print(f"Mantissa: 0x{mantissa}")
+    print(f"Mantissa: 0x{mantissa}")
     return mantissa
 
 
-# def generate_question_floating_no2():
+def generate_question_floating_no2():
 
 
 def main():
