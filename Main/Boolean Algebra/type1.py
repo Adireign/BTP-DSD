@@ -1,0 +1,1 @@
+#Given a boolean variable, output is independent of?
