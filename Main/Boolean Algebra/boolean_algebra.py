@@ -31,6 +31,12 @@ def gen_random_exp(num_vars): #generating in postfix
             break
     return stack
 
+def exp_to_table(exp, num_vars):
+    table=[]
+    for val in exp:
+        pass
+
+
 def print_exp(exp):
     stack=[]
     for i, val in enumerate(exp):
@@ -84,5 +90,13 @@ def print_sop(sop):
         if i!= len(sop)-1:
             print("+", end="")
 
+
+def table_to_minterms(table):
+    minterms = []
+    res=len(table[0])-1
+    for i in range (len(table)):
+        if table[i][res]==1:
+            minterms.append(i)
+    return minterms, res
 
         
