@@ -26,7 +26,7 @@ def generate_question_floating_no1():
     return mantissa
 
 
-def generate_question_floating_no2():
+# def generate_question_floating_no2():
 
 
 def main():

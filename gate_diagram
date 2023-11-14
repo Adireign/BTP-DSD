@@ -1,0 +1,8 @@
+// Gate Diagram
+digraph {
+	Input_0
+	Input_2
+	Gate_4 [label=OR]
+	Input_0 -> Gate_4
+	Input_2 -> Gate_4
+}
