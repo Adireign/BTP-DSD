@@ -1,38 +1,32 @@
-from reportlab.lib.pagesizes import letter
-from reportlab.pdfgen import canvas
-import Facts
-
-def generate_question(level):
-    # Your logic to generate a question based on the level
-    # Return the generated question
-    ques = ["Q1","Q2","Q3"];
-    return ques
-
-def generate_pdf(num_questions, level):
-    filename = f"questions_{num_questions}_level_{level}.pdf"
-    document_title = f"Generated Questions - Level {level}"
-
-    # Create PDF
-    c = canvas.Canvas(filename, pagesize=letter)
-    c.setTitle(document_title)
-
-    # Add questions to the PDF
-    depth = 700
-    for _ in range(num_questions):
-        question, options, answer = Facts.generate_question_facts(level)
-        c.drawString(100, depth - _ * 50, f"Q{_ + 1}: {question}")
-        depth-=20
-        for option in options:
-            c.drawString(100, depth - _ * 50, f" {option}")
-            depth -= 20
 
 
-    # Save the PDF
-    c.save()
-    print(f"PDF '{filename}' generated successfully.")
+# function which generates the question
+import Generator
+
+class question_tags:
+    def __init__(self, text, tags):
+        self.text = text
+        self.tags = tags
+
+tags = [
+    question_tags("tag-1", ["Number-System"]),
+    question_tags("tag-2", ["Boolean-algebra"]),
+    question_tags("tag-3", ["Gates"]),
+    question_tags("tag-4", ["Flip-flops"]),
+    question_tags("tag-5",["Theory"])
+    # Add more questions with different tags
+]
 
 if __name__ == "__main__":
+    # print("Please select the topics you want to include from the available tags-")
+    available_tags = set(tag for question in tags for tag in question.tags)
+
+    print("Available tags:", available_tags)
+    selected_tags = input("Select tags (comma-separated): ").split(',')    
+
     num_questions = int(input("Enter the number of questions: "))
     level = int(input("Enter the level: "))
+    # question_tags = int(input())
 
-    generate_pdf(num_questions, level)
+    # generate_pdf(num_questions, level)
+    Generator.generate_pdf(num_questions,level,selected_tags)
