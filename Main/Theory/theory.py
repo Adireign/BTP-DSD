@@ -26,6 +26,31 @@ questions = [
         "options": ["A. 10^-126 and 10^127", "B. 10^-127 and 10^127", "C. 2^-126 and 2^127", "D. 2^-127 and 2^127"],
         "correct_answer": "C. 2^-126 and 2^127",
     },
+    {
+        "question": "A register capable of increasing or decreasing it's contents is",
+        "options": ["A. Counter", "B. Decoder", "C. Multiplexer", "D. Demultiplexer"],
+        "correct_answer": "B. Decoder",
+    },
+    {
+        "question": "What type of number syste is represented by base 8",
+        "options": ["A. Decimal", "B. Binary", "C. Octal", "D. Hexadecimal"],
+        "correct_answer": "C. Octal",
+    },
+    {
+        "question": "Which coding scheme is used in computer to represent data internally",
+        "options": ["A. Decimal", "B. Integral", "C. Binary", "D. None"],
+        "correct_answer": "C. Binary",
+    },
+    {
+        "question": "Which among the following is not a logic gate",
+        "options": ["A. XOR", "B. AND", "C. OR", "D. NOT"],
+        "correct_answer": "A. XOR",
+    },
+    {
+        "question": "A register capable of increasing or decreasing it's contents is",
+        "options": ["A. Counter", "B. Decoder", "C. Multiplexer", "D. Demultiplexer"],
+        "correct_answer": "B. Decoder"
+    },
     
 ]
 # returns a question statement and answer option
