@@ -1,6 +1,8 @@
 import random
 import math
 import struct
+import Utilities.binaryOperations
+import Distractors.distractors
 
 def binary_to_decimal(binary):
     return int(binary, 2)
@@ -10,8 +12,9 @@ def binary_to_hexadecimal(binary):
     return hex(decimal)[2:]
 
 # returns mantissa
-def generate_question_floating_no1():
+def generate_question_floating():
     decimal_number = random.uniform(0, 10)
+    decimal_number = 64.5
     float_representation = struct.unpack('f', struct.pack('f', decimal_number))[0]
     binary_representation = format(struct.unpack('!I', struct.pack('!f', float_representation))[0], '032b')
 
@@ -35,12 +38,12 @@ def main():
     
     for _ in range(num):
         
-        question_type = random.choice(["1","2","3","4"])
-        if question_type=="1":
-            generate_question_floating_no1()
+        question_type = random.choice([1])
+        if question_type==1:
+            generate_question_floating()
 
         else:
-            generate_question_floating_no1()
+            generate_question_floating()
        
 
 

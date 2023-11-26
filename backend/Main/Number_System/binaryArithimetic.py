@@ -1,4 +1,6 @@
 import random
+# import ..Utilities.binaryOperations
+
 
 
 def generate_random_operation(bit_length):
@@ -8,7 +10,18 @@ def generate_random_operation(bit_length):
     return random.randint(min_value, max_value)
 
 
-def generate_random_2scomp_no1():
+# def generate_random_2scomp_no1():
+def generate_question_binary_arithimetic_options(level):
+
+    
+
+
+def generate_question_binary_arithimetic(level):
+    bit_length = 10
+    random_decimal = generate_random_decimal(bit_length)
+    question_text = f"What is the 2's complement for {random_decimal} (in binary form): "
+    return question_text, options, correct_answer
+
 
 
 def main():

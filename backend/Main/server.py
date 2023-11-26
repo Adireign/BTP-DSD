@@ -7,7 +7,7 @@ from main import main
 app = Flask(__name__)
 CORS(app)  # Enable CORS for all routes
 
-@app.route('/submit_quiz', methods=['POST'])
+@app.route('/usbmit_quiz', methods=['POST'])
 def submit_quiz():
     print("started")
     data = request.json  # Get JSON payload from the request
