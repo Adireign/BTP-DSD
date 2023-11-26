@@ -5,29 +5,43 @@ from reportlab.pdfgen import canvas
 import Theory.theory
 
 # Here we generate question based on tags and then generate a PDF
-def generate_pdf(num_questions, level,tags):
+def generate_pdf(num_questions, level, tags):
     filename = f"questions_{num_questions}_level_{level}.pdf"
     document_title = f"Generated Questions - Level {level}"
-    # generate_question(level,tags)
 
     # Create PDF
     c = canvas.Canvas(filename, pagesize=letter)
     c.setTitle(document_title)
 
-    # Add questions to the PDF
+    # Set up initial depth
     depth = 700
-    for _ in range(num_questions):
-        question, options, answer = generate_question(level,tags)
-        c.drawString(100, depth - _ * 50, f"Q{_ + 1}: {question}")
-        depth-=20
+
+    # Number of questions per page
+    questions_per_page = 5
+
+    # Convert num_questions to an integer
+    num_questions = int(num_questions)
+
+    for question_num in range(num_questions):
+        # Check if a new page is needed
+        if question_num > 0 and question_num % questions_per_page == 0:
+            c.showPage()  # Start a new page
+            depth = 700  # Reset depth for the new page
+
+        question, options, answer = generate_question(level, tags)
+        c.drawString(100, depth, f"Q{question_num + 1}: {question}")
+        depth -= 20
+
         for option in options:
-            c.drawString(100, depth - _ * 50, f" {option}")
+            c.drawString(100, depth, f" {option}")
             depth -= 20
+            
+        depth -= 20
 
-
-#   Saving the file
+    # Saving the file
     c.save()
     print(f"PDF '{filename}' generated successfully.")
+
 
 def generate_question(level,tags):
     print(level,tags)

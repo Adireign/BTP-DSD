@@ -16,6 +16,12 @@ tags = [
     question_tags("tag-5",["Theory"])
     # Add more questions with different tags
 ]
+def main(selected_tags,num_questions,level):
+    print(selected_tags)
+    print(num_questions)
+    print(level)
+    Generator.generate_pdf(num_questions,level,selected_tags)
+    
 
 if __name__ == "__main__":
     # print("Please select the topics you want to include from the available tags-")
