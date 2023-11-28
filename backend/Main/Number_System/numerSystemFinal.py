@@ -1,4 +1,5 @@
 import random
+import struct
 
 # Utilites
 def generate_binary_number(length):
@@ -137,6 +138,7 @@ def generate_octal_options(octal_number):
     
 def generate_decimal_options(decimal_number):
     options = set()
+    decimal_number = str(decimal_number)
     options.add(decimal_number)
 
     while len(options) < 4:
@@ -321,31 +323,116 @@ def generate_question_conversion(level):
 # Floating Numbers question
 
 # Question - 1
+def generate_question_floating_Q1(level):
+    decimal_number = random.uniform(0, 10)
+    question_text = f"Write the mantissa (in Hexadecimal) for the decimal number: {decimal_number}"
+    float_representation = struct.unpack('f', struct.pack('f', decimal_number))[0]
+    binary_representation = format(struct.unpack('!I', struct.pack('!f', float_representation))[0], '032b')
+    sign_bit = binary_representation[0]
+    exponent = binary_representation[1:9]
+    # mantissa
+    correct_answer = binary_representation[9:]
+    correct_answer = binary_to_hexadecimal(correct_answer)
+    options,correct_answer = generate_hexadecimal_options(correct_answer)
+    return question_text,options,correct_answer
+    
+# Question - 2
+def generate_question_floating_Q2(level):
+    return 1
+    
+
+
 
 
 def generate_question_floating_numbers(level):
     floating_number_topic_list = [1]
     selected_topic = random.choice(floating_number_topic_list)
     if selected_topic == 1:
-        # return generate_question_graycode_to_bcd(level)
+        return generate_question_floating_Q1(level)
     elif selected_topic == 2:
+        return generate_question_floating_Q1(level)
         # return generate_question_decimal_to_excess3_bcd(level)
-    elif selected_topic == 3:
-        # return generate_question_decimal_to_8421_bcd(level)
+    # elif selected_topic == 3:
+    #     return generate_question_decimal_to_8421_bcd(level)
 
 
+# Binary Arithimetic Questions...
 
+# utilities
+def generate_random_binary(length=8, decimal_places=4):
+    # Generate a random integer with the specified length
+    rand_int = random.randint(0, 2**length - 1)
+
+    # Convert the integer to binary with the specified number of decimal places
+    binary_str = format(rand_int, f'0{length}b')
+    
+    # Insert the decimal point
+    binary_str = f"{binary_str[:-decimal_places]}.{binary_str[-decimal_places:]}"
+
+    return binary_str
+
+def binary_to_decimal_binary(binary_str):
+    decimal = 0
+    ans = 0
+    if binary_str[0] == '1':
+        ans = ans + (2**3) 
+    if binary_str[1] == '1':
+        ans = ans + (2**2) 
+    if binary_str[2] == '1':
+        ans = ans + (2**1) 
+    if binary_str[3] == '1':
+        ans = ans + (2**0) 
+    if binary_str[5] == '1':
+        ans = ans + (2**-1) 
+    if binary_str[6] == '1':
+        ans = ans + (2**-2) 
+    if binary_str[7] == '1':
+        ans = ans + (2**-3) 
+    if binary_str[8] == '1':
+        ans = ans + (2**-4) 
+    return ans
+
+# Question 1
+def generate_question__binary_arithimetic_decimal_equivalent(level):
+    binary_number = generate_random_binary()
+    question_text = f"The decimal equivalent of {binary_number} is?"
+    correct_answer = binary_to_decimal_binary(binary_number)
+    options, correct_answer = generate_decimal_options(correct_answer)
+    return question_text,options,correct_answer
+
+# Question 2
+def generate_question_binary_arithimetic_breaking_in_parts(level):
+    random_number = random.randint(15,100)
+    first_number = random.randint(15,random_number)
+    second_number = random_number - first_number
+    hexa_random_number = decimal_to_hexadecimal(random_number)
+    hexa_first_number = decimal_to_hexadecimal(first_number)
+    hexa_second_number = decimal_to_hexadecimal(second_number)
+
+
+# Main function
+def generate_question_binary_arithimetic(level):
+    binary_arithimetic_topic_list = [1,2]
+    selected_topic = random.choice(binary_arithimetic_topic_list)
+    if selected_topic == 1:
+        return generate_question__binary_arithimetic_decimal_equivalent(level)
+    elif selected_topic == 2:
+        return generate_question__binary_arithimetic_decimal_equivalent(level)
 
 
 
 # Overall function
 def generate_question_number_system(level):
-    number_system_topic_list = [1,2]
+    number_system_topic_list = [1,2,3,4]
     selected_topic = random.choice(number_system_topic_list)
     if selected_topic == 1:
         return generate_question_binary_codes(level)
     elif selected_topic == 2:
-        return generate_question_binary_codes(level)
+        return generate_question_conversion(level)
+    elif selected_topic == 3:
+        return generate_question_floating_numbers(level)
+    elif selected_topic == 4:
+        return generate_question_binary_arithimetic(level)
 
 if __name__ == "__main__":
     ans = generate_question_number_system(1)
