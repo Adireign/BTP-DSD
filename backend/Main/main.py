@@ -24,15 +24,4 @@ def main(selected_tags,num_questions,level):
     
 
 if __name__ == "__main__":
-    # print("Please select the topics you want to include from the available tags-")
-    available_tags = set(tag for question in tags for tag in question.tags)
-
-    print("Available tags:", available_tags)
-    selected_tags = input("Select tags (comma-separated): ").split(',')    
-
-    num_questions = int(input("Enter the number of questions: "))
-    level = int(input("Enter the level: "))
-    # question_tags = int(input())
-
-    # generate_pdf(num_questions, level)
-    Generator.generate_pdf(num_questions,level,selected_tags)
+    print("here")

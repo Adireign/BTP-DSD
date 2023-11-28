@@ -2,7 +2,7 @@ import random
 from reportlab.lib.pagesizes import letter
 from reportlab.pdfgen import canvas
 
-import Number_System.numberSystem
+import Number_System.numerSystemFinal
 import Theory.theory
 
 # Here we generate question based on tags and then generate a PDF
@@ -68,15 +68,15 @@ def generate_question(level,tags):
     flag = random.choice(random_list)
     print(flag)
     if flag == 1:
-        return Number_System.numberSystem.generate_question_number_system(level)
+        return Number_System.numerSystemFinal.generate_question_number_system(level)
     elif flag == 2:
-        return Theory.theory.generate_question_theory(level)
+        return Number_System.numerSystemFinal.generate_question_number_system(level)
     elif flag == 3:
-        return Theory.theory.generate_question_theory(level)
+        return Number_System.numerSystemFinal.generate_question_number_system(level)
     elif flag == 4:
-        return Theory.theory.generate_question_theory(level)
+        return Number_System.numerSystemFinal.generate_question_number_system(level)
     elif flag == 5:
-        return Theory.theory.generate_question_theory(level)
+        return Number_System.numerSystemFinal.generate_question_number_system(level)
 
 
 
