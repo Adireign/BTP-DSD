@@ -1,6 +1,6 @@
 import random
 from QM_method import *
-from boolean_algebra import *
+from booleanAlgebraFinal import *
 
 # flip sign
 def bit_flip_var(x):
