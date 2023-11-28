@@ -7,7 +7,8 @@ class var:
         self.symbol=symbol
         self.sign=sign
     
-#utilities for boolean algebra (conversions from one form to another and evaluations)
+#############    utilities for boolean algebra (conversions from one form to another and evaluations)
+
 def gen_random_exp(num_vars): #generating in postfix
     limit=random.randint(1,5) # lim on terms
     vars=[]
@@ -111,6 +112,26 @@ def gen_pos(table):
     return pos
 
 
+def print_sop(sop):
+    output_buffer = io.StringIO()
+    sys.stdout = output_buffer
+    for i, prod in enumerate(sop):
+        print("(", end="")
+        for j, vars in enumerate(prod):
+            if vars.sign=="-":
+                print("~", end="")
+            print("{0}".format(vars.symbol), end="")
+            if j!=len(prod)-1:
+                print(".", end="")
+        print(")", end="")
+        if i!= len(sop)-1:
+            print("+", end="")
+
+    sys.stdout = sys.__stdout__
+    captured_output = output_buffer.getvalue()
+    return captured_output
+
+
 def print_pos(pos):
     output_buffer = io.StringIO()
     sys.stdout = output_buffer
@@ -140,7 +161,7 @@ def table_to_minterms(table):
     return minterms, res
 
 
-#utilities for qm method
+######################   utilities for qm method   #############################
 def mul(x,y):
     res = []
     for i in x:
@@ -389,9 +410,9 @@ def manipulate_dc(table):
     return dc
 
 
-#question templates
-#give SOP for the minterms ( minterm as digits)
-def sop_to_minterm_1():
+####   question templates  ############################
+
+def sop_to_minterm():
     table = gen_random_truth_table(3)
     sop = gen_sop(table)
     minterms = table_to_minterms(table)
@@ -403,7 +424,78 @@ def sop_to_minterm_1():
         if m:
             options.append(m)
     options.append(minterms[0])
+    random.shuffle(options)
     return question,options,answer
+
+def pos_to_minterm():
+    table = gen_random_truth_table(3)
+    pos = gen_pos(table)
+    minterms = table_to_minterms(table)
+    question = "What are the minterms for the given pos expression: {0}".format(print_pos(pos))
+    answer = minterms[0]
+    options=[]
+    while len(options)<3:
+        m=manipulate_dc(table)
+        if m:
+            options.append(m)
+    options.append(minterms[0])
+    random.shuffle(options)
+    return question,options,answer
+
+def sop_to_pos():
+    table = gen_random_truth_table(3)
+    sop = gen_sop(table)
+    minterms, num = table_to_minterms(table)
+    pos = gen_pos(table)
+    question = "Convert the expression {0} to POS form".format(print_sop(sop))
+    answer = print_pos(pos)
+    options=[]
+    options.append(answer)
+    for i in range(3):
+        options.append(print_pos(gen_pos(minterm_to_table(manipulate_minterms(table), num))))
+    random.shuffle(options)
+    return question, options, answer
+
+def pos_to_sop():
+    table = gen_random_truth_table(3)
+    sop = gen_sop(table)
+    minterms, num = table_to_minterms(table)
+    pos = gen_pos(table)
+    question = "Convert the expression {0} to SOP form".format(print_pos(pos))
+    answer = print_sop(sop)
+    options=[]
+    options.append(answer)
+    for i in range(3):
+        options.append(print_sop(gen_sop(minterm_to_table(manipulate_minterms(table), num))))
+    random.shuffle(options)
+    return question, options, answer
+
+def minterm_to_sop():
+    table = gen_random_truth_table(3)
+    sop = gen_sop(table)
+    minterms, num = table_to_minterms(table)
+    question = "The SOP for the given minterms - {0} is?".format(minterms)
+    answer = print_sop(sop)
+    options=[]
+    options.append(answer)
+    for i in range(3):
+        options.append(print_sop(gen_sop(minterm_to_table(manipulate_minterms(table), num))))
+    random.shuffle(options)
+    return question, options, answer
+
+def minterm_to_pos():
+    table = gen_random_truth_table(3)
+    pos = gen_pos(table)
+    minterms, num = table_to_minterms(table)
+    question = "The POS for the given minterms - {0} is?".format(minterms)
+    answer = print_pos(pos)
+    options=[]
+    options.append(answer)
+    for i in range(3):
+        options.append(print_pos(gen_pos(minterm_to_table(manipulate_minterms(table), num))))
+    random.shuffle(options)
+    return question, options, answer
+
 
 #evaluate the given expression 
 def evaluate():
@@ -452,11 +544,11 @@ def evaluate():
 
     answer=res[0]
     options=['0', '1']
+    random.shuffle(options)
     return question, options, answer
 
 
-#what is the simplified form
-def simplify_exp():
+def simplify_exp_sop():
     table = gen_random_truth_table(3)
     question = "Minimize the given expression - {0}".format(print_sop(gen_sop(table)))
     minterms, num_vars = table_to_minterms(table)
@@ -467,7 +559,24 @@ def simplify_exp():
     options.append(print_QM_distract(minterms, []))
     options.append(print_QM_distract(manipulate_minterms(table), manipulate_dc(table)))
     answer=print_QM(minterms, [])
+    random.shuffle(options)
     return question, options, answer
+
+
+def simplify_exp_pos():
+    table = gen_random_truth_table(3)
+    question = "Minimize the given expression - {0}".format(print_pos(gen_pos(table)))
+    minterms, num_vars = table_to_minterms(table)
+    options=[]
+    options.append(print_QM(manipulate_minterms(table), []))
+    options.append(print_QM(manipulate_minterms(table), manipulate_dc(table)))
+    options.append(print_QM(minterms, []))
+    options.append(print_QM_distract(minterms, []))
+    options.append(print_QM_distract(manipulate_minterms(table), manipulate_dc(table)))
+    answer=print_QM(minterms, [])
+    random.shuffle(options)
+    return question, options, answer
+
 
 def simplify_exp_minterms():
     table = gen_random_truth_table(3)
@@ -480,6 +589,34 @@ def simplify_exp_minterms():
     options.append(print_QM_distract(minterms, []))
     options.append(print_QM_distract(manipulate_minterms(table), manipulate_dc(table)))
     answer=print_QM(minterms, [])
+    random.shuffle(options)
     return question, options, answer
 
-    
+
+question_list={
+    1: sop_to_minterm,
+    2: pos_to_minterm,
+    3: sop_to_pos,
+    4: pos_to_sop,
+    5: minterm_to_sop,
+    6: minterm_to_pos,
+    7: evaluate,
+    8: simplify_exp_sop,
+    9: simplify_exp_pos,
+    10: simplify_exp_minterms,
+}
+
+
+def test():
+    for i in range(1,11):
+        q,o,a=question_list[i]()
+        print(q)
+        print(o)
+        print(a)
+# test()  
+# Uncomment the test to check every question templates output
+
+#final function needs to be combined with generator.py
+def generate_question_boolean_algebra(level):
+    q,o,a = question_list[random.randint(1,10)]()
+    return q,o,a
