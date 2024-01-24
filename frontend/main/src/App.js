@@ -7,6 +7,7 @@ import FileList from "./components/Archives";
 import Team from "./components/Team";
 import Topic from "./components/Topic";
 import { Route, Routes } from 'react-router-dom';
+import AssessmentPage from "./components/AssessmentPage";
 
 
 function App() {
@@ -40,7 +41,13 @@ function App() {
       <Route path='/team' index element={
         <>
           <UpperNav />
-          <Topic/>
+          {/* <Topic/> */}
+        </>
+      }/>
+      <Route path='/AssessmentPage' index element={
+        <>
+          <UpperNav/>
+          <AssessmentPage/>
         </>
       }/>
        

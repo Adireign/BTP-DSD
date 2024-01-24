@@ -3,7 +3,11 @@ from reportlab.lib.pagesizes import letter
 from reportlab.pdfgen import canvas
 
 import Number_System.numerSystemFinal
+import Boolean_Algebra.booleanAlgebraFinal
 import Theory.theory
+import io
+import os
+pdf_folder = "./PDF"
 
 # Here we generate question based on tags and then generate a PDF
 def generate_pdf(num_questions, level, tags):
@@ -11,7 +15,9 @@ def generate_pdf(num_questions, level, tags):
     document_title = f"Generated Questions - Level {level}"
 
     # Create PDF
-    c = canvas.Canvas(filename, pagesize=letter)
+    pdf_path = os.path.join(pdf_folder, filename)
+    pdf_buffer = io.BytesIO()
+    c = canvas.Canvas(pdf_buffer)
     c.setTitle(document_title)
 
     # Set up initial depth
@@ -22,6 +28,7 @@ def generate_pdf(num_questions, level, tags):
 
     # Convert num_questions to an integer
     num_questions = int(num_questions)
+    right_padding = 50
 
     for question_num in range(num_questions):
         # Check if a new page is needed
@@ -30,30 +37,49 @@ def generate_pdf(num_questions, level, tags):
             depth = 700  # Reset depth for the new page
 
         question, options, answer = generate_question(level, tags)
-        c.drawString(100, depth, f"Q{question_num + 1}: {question}")
+        question_x = 100
+        option_x = 120
+        question_1 = ""
+        question_2 = ""
+        if len(question) >= 70:
+            question_1 = question[:70]
+            question_2 = question[70:]
+            c.drawString(question_x, depth, f"Q{question_num + 1}: {question_1}")
+            depth -= 20
+            c.drawString(question_x, depth, f"{question_2}")
+        else:
+            c.drawString(question_x, depth, f"Q{question_num + 1}: {question}")
+
         depth -= 20
 
         for option in options:
-            c.drawString(100, depth, f" {option}")
+            c.drawString(option_x, depth, f" {option}")
             depth -= 20
             
-        depth -= 20
+        # depth -= 20
+        c.drawString(option_x, depth, f"Correct answer: {answer}")
+        depth -= 30
 
     # Saving the file
     c.save()
+    with open(pdf_path, 'wb') as pdf_file:
+            pdf_file.write(pdf_buffer.getvalue())
     print(f"PDF '{filename}' generated successfully.")
 
 
 def generate_question(level,tags):
     print(level,tags)
     random_list = []
-    tag1 = "Number system"
+    tag1 = "Number-System"
     tag2 = "Boolean-algebra"
     tag3 = "Gates"
     tag4 = "Flip-flops"
     tag5 = "Theory"
     
-    for tag in "tags":
+    print("tags are")
+    print(tags)
+    for tag in tags:
+        print(tag)
         if tag == tag1:
             random_list.append(1)
         elif tag == tag2:
@@ -62,21 +88,24 @@ def generate_question(level,tags):
             random_list.append(3)
         elif tag == tag4:
             random_list.append(4)
-        else:
+        elif tag == tag5:
             random_list.append(5)
 
     flag = random.choice(random_list)
-    print(flag)
+    
+    print("It goes like..")
+    # print(tags)
+    print(random_list)
     if flag == 1:
         return Number_System.numerSystemFinal.generate_question_number_system(level)
     elif flag == 2:
-        return Number_System.numerSystemFinal.generate_question_number_system(level)
+        return Boolean_Algebra.booleanAlgebraFinal.generate_question_boolean_algebra(level)
     elif flag == 3:
         return Number_System.numerSystemFinal.generate_question_number_system(level)
     elif flag == 4:
-        return Number_System.numerSystemFinal.generate_question_number_system(level)
+        return Theory.theory.generate_question_theory(level)
     elif flag == 5:
-        return Number_System.numerSystemFinal.generate_question_number_system(level)
+        return Theory.theory.generate_question_theory(level)
 
 
 

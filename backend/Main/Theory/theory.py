@@ -51,6 +51,21 @@ questions = [
         "options": ["A. Counter", "B. Decoder", "C. Multiplexer", "D. Demultiplexer"],
         "correct_answer": "B. Decoder"
     },
+    {
+        "question": "For a particular design of multiplication unit with 6 bit multiplicand and 3 bit multiplier What is the worst case number of adders required for the design and what would be the size of those adders ?",
+        "options": ["A. 9 Adders; Size 3 bits", "B. 3 Adders; Size 9 bits", "C. 6 Adders; Size 6 bits", "D. 3 Adders; Size 6 bits"],
+        "correct_answer": "B. 3 Adders; Size 9 bits"
+    },
+    {
+        "question": "How many 4 bit adders are required to design a 16 bit carry select adder? Assume equal groups of sizes of 4 bit adder. Inputs are A[15:0], B[15:0] and C0.",
+        "options": ["A. 8", "B. 16", "C. 15", "D. 17"],
+        "correct_answer": "A. 8"
+    },
+    {
+        "question": "Which of the following represents the characteristic equations",
+        "options": ["A. AQ’ + B’Q", "B. AB’ + Q’", "C. A’B’ + ,Q’", "D. A’Q + B’Q"],
+        "correct_answer": "A. AQ’ + B’Q"
+    }
     
 ]
 # returns a question statement and answer option

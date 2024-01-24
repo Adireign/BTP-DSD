@@ -52,10 +52,10 @@ def print_exp(exp):
                 string="~"+string
             stack.append(string)
             
-    print(stack[0])
+    # print(stack[0])
     sys.stdout = sys.__stdout__
     captured_output = output_buffer.getvalue()
-    return captured_output
+    return stack[0]
 
 
 def gen_random_truth_table(num_vars):   #num_vars uptill 26 only for now.. practically 5-6 variable are required to generate question
@@ -425,7 +425,13 @@ def sop_to_minterm():
             options.append(m)
     options.append(minterms[0])
     random.shuffle(options)
-    return question,options,answer
+    idx = 'A'
+    new_options = []
+    for option in options:
+        new_option = idx+". "+str(option)
+        new_options.append(new_option)
+        idx = chr(ord(idx) + 1)
+    return question, new_options, answer
 
 def pos_to_minterm():
     table = gen_random_truth_table(3)
@@ -440,7 +446,13 @@ def pos_to_minterm():
             options.append(m)
     options.append(minterms[0])
     random.shuffle(options)
-    return question,options,answer
+    idx = 'A'
+    new_options = []
+    for option in options:
+        new_option = idx+". "+str(option)
+        new_options.append(new_option)
+        idx = chr(ord(idx) + 1)
+    return question, new_options, answer
 
 def sop_to_pos():
     table = gen_random_truth_table(3)
@@ -454,7 +466,13 @@ def sop_to_pos():
     for i in range(3):
         options.append(print_pos(gen_pos(minterm_to_table(manipulate_minterms(table), num))))
     random.shuffle(options)
-    return question, options, answer
+    idx = 'A'
+    new_options = []
+    for option in options:
+        new_option = idx+". "+str(option)
+        new_options.append(new_option)
+        idx = chr(ord(idx) + 1)
+    return question, new_options, answer
 
 def pos_to_sop():
     table = gen_random_truth_table(3)
@@ -468,7 +486,13 @@ def pos_to_sop():
     for i in range(3):
         options.append(print_sop(gen_sop(minterm_to_table(manipulate_minterms(table), num))))
     random.shuffle(options)
-    return question, options, answer
+    idx = 'A'
+    new_options = []
+    for option in options:
+        new_option = idx+". "+str(option)
+        new_options.append(new_option)
+        idx = chr(ord(idx) + 1)
+    return question, new_options, answer
 
 def minterm_to_sop():
     table = gen_random_truth_table(3)
@@ -481,7 +505,13 @@ def minterm_to_sop():
     for i in range(3):
         options.append(print_sop(gen_sop(minterm_to_table(manipulate_minterms(table), num))))
     random.shuffle(options)
-    return question, options, answer
+    idx = 'A'
+    new_options = []
+    for option in options:
+        new_option = idx+". "+str(option)
+        new_options.append(new_option)
+        idx = chr(ord(idx) + 1)
+    return question, new_options, answer
 
 def minterm_to_pos():
     table = gen_random_truth_table(3)
@@ -494,7 +524,13 @@ def minterm_to_pos():
     for i in range(3):
         options.append(print_pos(gen_pos(minterm_to_table(manipulate_minterms(table), num))))
     random.shuffle(options)
-    return question, options, answer
+    idx = 'A'
+    new_options = []
+    for option in options:
+        new_option = idx+". "+str(option)
+        new_options.append(new_option)
+        idx = chr(ord(idx) + 1)
+    return question, new_options, answer
 
 
 #evaluate the given expression 
@@ -517,7 +553,7 @@ def evaluate():
             question+="C={0} ".format(mapy['C'])
         elif(i==3):
             question+="D={0} ".format(mapy['D'])
-    question+="\n"
+    # question+="\n"
 
     new_stack=[]
     for i, val in enumerate(exp):
@@ -545,7 +581,13 @@ def evaluate():
     answer=res[0]
     options=['0', '1']
     random.shuffle(options)
-    return question, options, answer
+    idx = 'A'
+    new_options = []
+    for option in options:
+        new_option = idx+". "+str(option)
+        new_options.append(new_option)
+        idx = chr(ord(idx) + 1)
+    return question, new_options, answer
 
 
 def simplify_exp_sop():
@@ -560,7 +602,13 @@ def simplify_exp_sop():
     options.append(print_QM_distract(manipulate_minterms(table), manipulate_dc(table)))
     answer=print_QM(minterms, [])
     random.shuffle(options)
-    return question, options, answer
+    idx = 'A'
+    new_options = []
+    for option in options:
+        new_option = idx+". "+str(option)
+        new_options.append(new_option)
+        idx = chr(ord(idx) + 1)
+    return question, new_options, answer
 
 
 def simplify_exp_pos():
@@ -575,7 +623,13 @@ def simplify_exp_pos():
     options.append(print_QM_distract(manipulate_minterms(table), manipulate_dc(table)))
     answer=print_QM(minterms, [])
     random.shuffle(options)
-    return question, options, answer
+    idx = 'A'
+    new_options = []
+    for option in options:
+        new_option = idx+". "+str(option)
+        new_options.append(new_option)
+        idx = chr(ord(idx) + 1)
+    return question, new_options, answer
 
 
 def simplify_exp_minterms():
@@ -590,7 +644,13 @@ def simplify_exp_minterms():
     options.append(print_QM_distract(manipulate_minterms(table), manipulate_dc(table)))
     answer=print_QM(minterms, [])
     random.shuffle(options)
-    return question, options, answer
+    idx = 'A'
+    new_options = []
+    for option in options:
+        new_option = idx+". "+str(option)
+        new_options.append(new_option)
+        idx = chr(ord(idx) + 1)
+    return question, new_options, answer
 
 
 question_list={
@@ -620,3 +680,7 @@ def test():
 def generate_question_boolean_algebra(level):
     q,o,a = question_list[random.randint(1,10)]()
     return q,o,a
+
+if __name__ == "__main__":
+    ans = generate_question_boolean_algebra(1)
+    print(ans)

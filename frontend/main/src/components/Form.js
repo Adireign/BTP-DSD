@@ -1,9 +1,13 @@
 import React, { useState } from 'react';
+import { Link } from 'react-router-dom';
+import { useNavigate } from 'react-router-dom';
 
 const QuizForm = () => {
   const [selectedTags, setSelectedTags] = useState([]);
   const [selectedLevel, setSelectedLevel] = useState(null);
   const [numQuestions, setNumQuestions] = useState('');
+  const [generated, setgenerated] = useState(0)
+  const navigate = useNavigate()
 
   const handleTagClick = (tag) => {
     if (selectedTags.includes(tag)) {
@@ -22,7 +26,7 @@ const QuizForm = () => {
     setNumQuestions(inputValue);
   };
 
-  const handleSubmit = async (event) => {
+  const handleGeneratePdf = async (event) => {
     console.log(selectedTags)
     console.log(selectedLevel)
     console.log(numQuestions)
@@ -48,6 +52,7 @@ const QuizForm = () => {
       // Handle the response as needed
       if (response.ok) {
         alert('Quiz submitted successfully!');
+        setgenerated(0)
       } else {
         console.error('Failed to submit quiz.');
       }
@@ -56,6 +61,36 @@ const QuizForm = () => {
     }
   };
 
+  const handleStartAssessment = async (event) => {
+    // Create payload to send to the server
+    const payload = {
+      tags: selectedTags,
+      level: selectedLevel,
+      numQuestions: numQuestions,
+    };
+    try {
+      const response = await fetch('http://localhost:5000/startAssessment',{
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json',
+        },
+        body: JSON.stringify(payload),
+      })
+      const data = await response.json()
+      console.log(data.questions)
+      if (response.ok) {
+        alert('assessment to start successfully!');
+        setgenerated(0)
+      } else {
+        console.error('Failed to submit quiz.');
+      }
+      navigate('/AssessmentPage',{questions: data.questions})
+    } catch (error) {
+      console.log(error)
+    }
+    
+  }
+  
   const tags = ['Number-System', 'Boolean-algebra', 'Gates', 'Flip-flops', 'Theory'];
   const levels = ['Level-1', 'Level-2', 'Level-3'];
 
@@ -105,7 +140,7 @@ const QuizForm = () => {
           {/* Question Input */}
           <div>
             <h3 className="text-lg font-semibold mb-2">Enter Number of Questions</h3>
-            <form onSubmit={handleSubmit} className="flex items-center space-x-2">
+            <form className="flex items-center space-x-2">
               <label htmlFor="numQuestionsInput" className="text-gray-700">
                 Questions:
               </label>
@@ -123,10 +158,16 @@ const QuizForm = () => {
         {/* Submit Button */}
         <div className="mt-4">
           <button
-            onClick={handleSubmit}
+            onClick={handleGeneratePdf}
             className="p-2 bg-blue-500 text-white rounded-md cursor-pointer"
           >
-            Submit Quiz
+            Generate PDF
+          </button>
+          <button
+            onClick={handleStartAssessment}
+            className="ml-8 p-2 bg-blue-500 text-white rounded-md cursor-pointer"
+          >
+            Start Assessment
           </button>
         </div>
       </div>
