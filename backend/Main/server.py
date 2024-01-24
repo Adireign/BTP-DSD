@@ -1,4 +1,4 @@
-from flask import Flask, request, jsonify, send_from_directory, send_file
+from flask import Flask, render_template, request, jsonify, send_from_directory, send_file, url_for, redirect
 from flask_cors import CORS
 from reportlab.lib.pagesizes import letter
 from reportlab.pdfgen import canvas
@@ -6,14 +6,40 @@ from main import main
 import os
 import io
 from generateAssessment import generateAssessment
+from google.auth.transport.requests import Request
+from google.oauth2.credentials import Credentials
+from google_auth_oauthlib.flow import InstalledAppFlow
+from googleapiclient.discovery import build
+from googleapiclient.errors import HttpError
+import googleapiclient.discovery
+
+SCOPES = ["https://www.googleapis.com/auth/spreadsheets"]
+SPREADSHEET_ID = '1KlwPwg3QgPrYsGJNNYjw31NDJ5Z7gkPX8a-RLqQbF0o'
+
+def get_google_sheets_service():
+    creds = None
+    if os.path.exists("token.json"):
+        creds = Credentials.from_authorized_user_file("token.json",SCOPES)
+    if not creds or not creds.valid:
+        if creds and creds.expired and creds.refresh_token:
+            creds.refresh(Request())
+        else:
+            flow = InstalledAppFlow.from_client_secrets_file(
+                 "credentials.json", SCOPES
+            )
+            creds = flow.run_local_server(port=0)
+        with open("token.json","w") as token:
+            token.write(creds.to_json())
+    service = googleapiclient.discovery.build('sheets', 'v4', credentials=creds)
+    return service
 
 app = Flask(__name__)
 CORS(app)  # Enable CORS for all routes
 
 @app.route('/submit_quiz', methods=['POST'])
 def submit_quiz():
-    data = request.json  # Get JSON payload from the request
-    # Process the data as needed
+    data = request.json  
+    
     print('Received quiz data for PDF generation:', data)
 
     ans = main(data['tags'],data['numQuestions'],data['level'])
@@ -35,6 +61,28 @@ def submit_assessment():
     data = request.json
     print('Recieved assessment data')
     print(data)
+    sheets_service = get_google_sheets_service()
+    range_ = 'Sheet1'
+    
+    firstdone = 0
+    for key,values in data['feedback1'].items():
+        idx = int(key)
+        values = [[idx+1,data['feedback1'][key],data['feedback2'][key],data['feedback3'][key],data['feedback4'][key]]]
+        result = sheets_service.spreadsheets().values().get(
+            spreadsheetId=SPREADSHEET_ID, range=range_
+        ).execute()
+        values_in_sheet = result.get('values', [])
+        last_row_index = len(values_in_sheet)
+        if firstdone == 0:
+            last_row_index = last_row_index+1
+        new_range = f'{range_}!A{last_row_index + 1}'
+        sheets_service.spreadsheets().values().update(
+            spreadsheetId=SPREADSHEET_ID, range=new_range,
+            body={'values': values}, valueInputOption='RAW'
+        ).execute()
+        firstdone = 1
+
+
     return jsonify({'work-done': 'done work'})
 
 

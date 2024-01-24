@@ -6,11 +6,13 @@ import 'slick-carousel/slick/slick-theme.css';
 const questionsData = [
   {
     question: 'What is the capital of France?',
-    options: ['Berlin', 'London', 'Paris', 'Madrid'],
+    options: ['A. Berlin', 'London', 'Paris', 'Madrid'],
+    answer: ['A. Berlin']
   },
   {
     question: 'Which programming language is this code written in?',
     options: ['Java', 'Python', 'JavaScript', 'C++'],
+    answer: ['C. JavaScript']
   },
   // Add more questions as needed
 ];
@@ -24,6 +26,7 @@ const Carousel = () => {
   const sliderRef = useRef(null);
   const completeFeedback = {
     selectedOptions: {},
+    correctOptions: {},
     feedback1: {},
     feedback2: {},
     feedback3: {},
@@ -68,6 +71,22 @@ const Carousel = () => {
     completeFeedback.feedback2 = feedback2
     completeFeedback.feedback3 = feedback3
     completeFeedback.feedback4 = feedback4
+    for(let i=0;i<Object.keys(selectedOptions).length;i++){
+      let key = i.toString()
+      if(questionsData[i].answer[0][0]=='A'){
+        completeFeedback.correctOptions[key] = "0"
+      }
+      else if(questionsData[i].answer[0][0]=='B'){
+        completeFeedback.correctOptions[key] = "1"
+      }
+      else if(questionsData[i].answer[0][0]=='B'){
+        completeFeedback.correctOptions[key] = "2"
+      }
+      else{
+        completeFeedback.correctOptions[key] = "3"
+      }
+    }
+
     console.log(completeFeedback)
     try {
       const response = await fetch("http://localhost:5000/submit_assessment",{
@@ -109,7 +128,7 @@ const Carousel = () => {
             <h2 className="text-2xl font-bold mb-4">{questionObj.question}</h2>
             <ul>
               {questionObj.options.map((option, optionIndex) => (
-                <li
+                <div
                   key={optionIndex}
                   className={`list-disc ml-4 ${selectedOptions[questionIndex] === optionIndex
                     ? 'text-blue-500 font-bold'
@@ -118,7 +137,7 @@ const Carousel = () => {
                   onClick={() => handleOptionSelect(questionIndex, optionIndex)}
                 >
                   {option}
-                </li>
+                </div>
               ))}
             </ul>
             <div className="ml-5 mr-5 mt-4 flex justify-between">
