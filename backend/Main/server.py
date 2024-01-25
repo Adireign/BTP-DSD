@@ -65,8 +65,14 @@ def submit_assessment():
     range_ = 'Sheet1'
     
     firstdone = 0
+    total_marks = 0
+    marks_scored = 0
     for key,values in data['feedback1'].items():
         idx = int(key)
+        total_marks = total_marks + 1
+        if int(data['selectedOptions'][key]) == int(data['correctOptions'][key]):
+            marks_scored = marks_scored + 1
+            
         values = [[idx+1,data['feedback1'][key],data['feedback2'][key],data['feedback3'][key],data['feedback4'][key]]]
         result = sheets_service.spreadsheets().values().get(
             spreadsheetId=SPREADSHEET_ID, range=range_
@@ -83,7 +89,7 @@ def submit_assessment():
         firstdone = 1
 
 
-    return jsonify({'work-done': 'done work'})
+    return jsonify({'total_marks': total_marks, 'marks_scored': marks_scored})
 
 
 @app.route('/pdf-files/<filename>', methods=['GET'])

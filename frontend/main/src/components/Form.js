@@ -69,22 +69,22 @@ const QuizForm = () => {
       numQuestions: numQuestions,
     };
     try {
-      const response = await fetch('http://localhost:5000/startAssessment',{
-        method: 'POST',
-        headers: {
-          'Content-Type': 'application/json',
-        },
-        body: JSON.stringify(payload),
-      })
-      const data = await response.json()
-      console.log(data.questions)
-      if (response.ok) {
-        alert('assessment to start successfully!');
-        setgenerated(0)
-      } else {
-        console.error('Failed to submit quiz.');
-      }
-      navigate('/AssessmentPage',{questions: data.questions})
+      // const response = await fetch('http://localhost:5000/startAssessment',{
+      //   method: 'POST',
+      //   headers: {
+      //     'Content-Type': 'application/json',
+      //   },
+      //   body: JSON.stringify(payload),
+      // })
+      // const data = await response.json()
+      // console.log(data.questions)
+      // if (response.ok) {
+      //   alert('assessment to start successfully!');
+      //   setgenerated(0)
+      // } else {
+      //   console.error('Failed to submit quiz.');
+      // }
+      navigate('/AssessmentPage', {state: {numQuestions,selectedTags,selectedLevel}})
     } catch (error) {
       console.log(error)
     }

@@ -1,23 +1,29 @@
 import React, { useState, useRef } from 'react';
+import { useEffect } from 'react';
 import Slider from 'react-slick';
 import 'slick-carousel/slick/slick.css';
 import 'slick-carousel/slick/slick-theme.css';
+import { useLocation, useNavigate } from 'react-router-dom';
+import AssessmentDone from './AssessmentDone';
 
-const questionsData = [
-  {
-    question: 'What is the capital of France?',
-    options: ['A. Berlin', 'London', 'Paris', 'Madrid'],
-    answer: ['A. Berlin']
-  },
-  {
-    question: 'Which programming language is this code written in?',
-    options: ['Java', 'Python', 'JavaScript', 'C++'],
-    answer: ['C. JavaScript']
-  },
-  // Add more questions as needed
-];
+// const questionsData = [
+//   {
+//     question: 'What is the capital of France?',
+//     options: ['A. Berlin', 'B. London', 'C. Paris', 'D. Madrid'],
+//     answer: ['A. Berlin']
+//   },
+//   {
+//     question: 'Which programming language is this code written in?',
+//     options: ['A. Java', 'B. Python', 'C. JavaScript', 'D. C++'],
+//     answer: ['C. JavaScript']
+//   },
+//   // Add more questions as needed
+// ];
 
 const Carousel = () => {
+  const navigate = useNavigate()
+  const [questionsData, setQuestionsData] = useState([])
+  const { numQuestions, selectedTags, selectedLevel } = useLocation().state;
   const [selectedOptions, setSelectedOptions] = useState([]);
   const [feedback1, setFeedback1] = useState({});
   const [feedback2, setFeedback2] = useState({});
@@ -31,6 +37,35 @@ const Carousel = () => {
     feedback2: {},
     feedback3: {},
     feedback4: {},
+  }
+
+  useEffect(() => {
+    const fetchQuestionData = async () => {
+      const payload = {
+        tags: selectedTags,
+        level: selectedLevel,
+        numQuestions: numQuestions,
+      };
+      try {
+        const response = await fetch('http://localhost:5000/startAssessment', {
+          method: 'POST',
+          headers: {
+            'content-type': 'application/json',
+          },
+          body: JSON.stringify(payload),
+        })
+        const data = await response.json()
+        setQuestionsData(data.questions)
+        console.log('data is', data)
+      } catch (error) {
+        console.log(error)
+      }
+    }
+    fetchQuestionData()
+  }, [])
+  if (!Array.isArray(questionsData)) {
+    console.error('questionsData is not an array:', questionsData);
+    return null; // or handle the error in another way
   }
 
   const handleOptionSelect = (questionIndex, optionIndex) => {
@@ -71,34 +106,37 @@ const Carousel = () => {
     completeFeedback.feedback2 = feedback2
     completeFeedback.feedback3 = feedback3
     completeFeedback.feedback4 = feedback4
-    for(let i=0;i<Object.keys(selectedOptions).length;i++){
+    for (let i = 0; i < Object.keys(selectedOptions).length; i++) {
       let key = i.toString()
-      if(questionsData[i].answer[0][0]=='A'){
+      if (questionsData[i].answer[0][0] == 'A') {
         completeFeedback.correctOptions[key] = "0"
       }
-      else if(questionsData[i].answer[0][0]=='B'){
+      else if (questionsData[i].answer[0][0] == 'B') {
         completeFeedback.correctOptions[key] = "1"
       }
-      else if(questionsData[i].answer[0][0]=='B'){
+      else if (questionsData[i].answer[0][0] == 'C') {
         completeFeedback.correctOptions[key] = "2"
       }
-      else{
+      else {
         completeFeedback.correctOptions[key] = "3"
       }
     }
 
     console.log(completeFeedback)
     try {
-      const response = await fetch("http://localhost:5000/submit_assessment",{
+      const response = await fetch("http://localhost:5000/submit_assessment", {
         method: 'POST',
         headers: {
           'Content-Type': 'application/json',
-
         },
         body: JSON.stringify(completeFeedback)
       })
       const data = await response.json()
       console.log(data)
+      const marksScored = data.marks_scored
+      const totalMarks = data.total_marks
+      const marks = [marksScored,totalMarks]
+      navigate('/AssessmentDone', { state: { questions: questionsData,marks } });
     } catch (error) {
       console.log(error)
     }
@@ -256,7 +294,7 @@ const Carousel = () => {
       >
         Submit Quiz
       </button>
-      <br/>
+      <br />
     </div>
   );
 };

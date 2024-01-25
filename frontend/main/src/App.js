@@ -8,6 +8,7 @@ import Team from "./components/Team";
 import Topic from "./components/Topic";
 import { Route, Routes } from 'react-router-dom';
 import AssessmentPage from "./components/AssessmentPage";
+import AssessmentDone from "./components/AssessmentDone";
 
 
 function App() {
@@ -48,6 +49,12 @@ function App() {
         <>
           <UpperNav/>
           <AssessmentPage/>
+        </>
+      }/>
+      <Route path='/AssessmentDone' index element={
+        <>
+          <UpperNav/>
+          <AssessmentDone/>
         </>
       }/>
        
