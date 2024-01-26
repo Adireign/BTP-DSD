@@ -23,42 +23,39 @@ function App() {
 
     // </div>
     <>
-    <Routes>
-      <Route path='/' index element={
-        <>
-          <UpperNav />
-          <div style={{ display: 'flex', justifyContent: 'center', alignItems: 'center', height: '65vh' }}>
-          
-          <QuizForm />
-          </div>
-        </>
-      }/>
-      <Route path='/past-questions' index element={
-        <>
-          <UpperNav />
-          <FileList/>
-        </>
-      }/>
-      <Route path='/team' index element={
-        <>
-          <UpperNav />
-          {/* <Topic/> */}
-        </>
-      }/>
-      <Route path='/AssessmentPage' index element={
-        <>
-          <UpperNav/>
-          <AssessmentPage/>
-        </>
-      }/>
-      <Route path='/AssessmentDone' index element={
-        <>
-          <UpperNav/>
-          <AssessmentDone/>
-        </>
-      }/>
-       
-    </Routes>
+      <Routes>
+        <Route path='/' index element={
+          <>
+            <UpperNav />
+            <QuizForm />
+          </>
+        } />
+        <Route path='/past-questions' index element={
+          <>
+            <UpperNav />
+            <FileList />
+          </>
+        } />
+        <Route path='/team' index element={
+          <>
+            <UpperNav />
+            {/* <Topic/> */}
+          </>
+        } />
+        <Route path='/AssessmentPage' index element={
+          <>
+            <UpperNav />
+            <AssessmentPage />
+          </>
+        } />
+        <Route path='/AssessmentDone' index element={
+          <>
+            <UpperNav />
+            <AssessmentDone />
+          </>
+        } />
+
+      </Routes>
     </>
   );
 }

@@ -135,8 +135,8 @@ const Carousel = () => {
       console.log(data)
       const marksScored = data.marks_scored
       const totalMarks = data.total_marks
-      const marks = [marksScored,totalMarks]
-      navigate('/AssessmentDone', { state: { questions: questionsData,marks } });
+      const marks = [marksScored, totalMarks]
+      navigate('/AssessmentDone', { state: { questions: questionsData, marks } });
     } catch (error) {
       console.log(error)
     }
@@ -160,40 +160,43 @@ const Carousel = () => {
 
   return (
     <div>
-      <Slider ref={sliderRef} {...settings}>
+      <Slider className='p-4' ref={sliderRef} {...settings}>
         {questionsData.map((questionObj, questionIndex) => (
-          <div key={questionIndex} className="bg-gray-200 p-4 rounded shadow">
-            <h2 className="text-2xl font-bold mb-4">{questionObj.question}</h2>
-            <ul>
-              {questionObj.options.map((option, optionIndex) => (
-                <div
-                  key={optionIndex}
-                  className={`list-disc ml-4 ${selectedOptions[questionIndex] === optionIndex
-                    ? 'text-blue-500 font-bold'
-                    : ''
-                    }`}
-                  onClick={() => handleOptionSelect(questionIndex, optionIndex)}
+          <>
+            <div key={questionIndex} className="bg-gray-200 p-4 rounded shadow">
+              <h2 className="text-2xl font-bold mb-4">{questionObj.question}</h2>
+              <ul>
+                {questionObj.options.map((option, optionIndex) => (
+                  <div
+                    key={optionIndex}
+                    className={`list-disc ml-4 ${selectedOptions[questionIndex] === optionIndex
+                      ? 'text-blue-500 font-bold'
+                      : ''
+                      }`}
+                    onClick={() => handleOptionSelect(questionIndex, optionIndex)}
+                  >
+                    {option}
+                  </div>
+                ))}
+              </ul>
+              <div className="ml-5 mr-5 mt-4 flex justify-between">
+                <button
+                  className="bg-blue-500 text-white px-4 py-2 rounded"
+                  onClick={handlePrev}
                 >
-                  {option}
-                </div>
-              ))}
-            </ul>
-            <div className="ml-5 mr-5 mt-4 flex justify-between">
-              <button
-                className="bg-blue-500 text-white px-4 py-2 rounded"
-                onClick={handlePrev}
-              >
-                Previous
-              </button>
-              <button
-                className="bg-blue-500 text-white px-4 py-2 rounded"
-                onClick={handleNext}
-              >
-                Next
-              </button>
-            </div>
+                  Previous
+                </button>
+                <button
+                  className="bg-blue-500 text-white px-4 py-2 rounded"
+                  onClick={handleNext}
+                >
+                  Next
+                </button>
+              </div>
 
-            <div className="mt-20">
+
+            </div>
+            <div className="mt-20 pl-2">
               <b>Feedback</b>
               <div className='feeback1'>
                 <p className="mb-2">Was the question helpful?</p>
@@ -285,11 +288,11 @@ const Carousel = () => {
                 Not lenghty
               </label>
             </div>
-          </div>
+          </>
         ))}
       </Slider>
       <button
-        className="mb-5 ml-5 mr-5 bg-blue-500 text-white px-4 py-2 mt-4 rounded"
+        className="mb-5 ml-5 mr-5 bg-blue-500 text-white px-4 py-2 mt-2 rounded"
         onClick={handleSubmit}
       >
         Submit Quiz
