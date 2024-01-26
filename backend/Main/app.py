@@ -36,6 +36,10 @@ def get_google_sheets_service():
 app = Flask(__name__)
 CORS(app)  # Enable CORS for all routes
 
+@app.route("/")
+def starting():
+    return "Server is running"
+
 @app.route('/submit_quiz', methods=['POST'])
 def submit_quiz():
     data = request.json  
@@ -106,5 +110,4 @@ def get_pdf_files():
 
 
 
-if __name__ == '__main__':
-    app.run(debug=True)
+
