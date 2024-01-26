@@ -42,7 +42,7 @@ const QuizForm = () => {
 
     try {
       // Send POST request to the Flask server
-      const response = await fetch('http://localhost:5000/submit_quiz', {
+      const response = await fetch('https://btp-dsd-server.vercel.app/submit_quiz', {
         method: 'POST',
         headers: {
           'Content-Type': 'application/json',
