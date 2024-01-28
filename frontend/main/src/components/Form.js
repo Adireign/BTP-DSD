@@ -42,7 +42,7 @@ const QuizForm = () => {
 
     try {
       // Send POST request to the Flask server
-      const response = await fetch('https://btp-dsd-server.vercel.app/submit_quiz', {
+      const response = await fetch('https://btp-dsd-xukb-server.vercel.app/submit_quiz', {
         method: 'POST',
         headers: {
           'Content-Type': 'application/json',
@@ -56,6 +56,7 @@ const QuizForm = () => {
         setgenerated(0)
       } else {
         console.error('Failed to submit quiz.');
+        console.log(response.statusText)
       }
     } catch (error) {
       console.error('Error:', error);

@@ -47,7 +47,7 @@ const Carousel = () => {
         numQuestions: numQuestions,
       };
       try {
-        const response = await fetch('http://localhost:5000/startAssessment', {
+        const response = await fetch('https://btp-dsd-xukb-server.vercel.app/startAssessment', {
           method: 'POST',
           headers: {
             'content-type': 'application/json',
