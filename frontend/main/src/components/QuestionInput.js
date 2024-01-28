@@ -35,9 +35,6 @@ const QuestionInput = () => {
           Submit
         </button>
       </form>
-      {/* <div className="mt-4">
-        <p className="text-gray-700">Selected Questions: {numQuestions || 'None'}</p>
-      </div> */}
     </div>
   );
 };

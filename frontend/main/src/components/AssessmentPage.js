@@ -29,6 +29,7 @@ const Carousel = () => {
   const [feedback2, setFeedback2] = useState({});
   const [feedback3, setFeedback3] = useState({});
   const [feedback4, setFeedback4] = useState({});
+  const [seconds, setSeconds] = useState(0);
   const sliderRef = useRef(null);
   const completeFeedback = {
     selectedOptions: {},
@@ -57,6 +58,10 @@ const Carousel = () => {
         const data = await response.json()
         setQuestionsData(data.questions)
         console.log('data is', data)
+        const intervalId = setInterval(() => {
+          setSeconds((prevSeconds) => prevSeconds + 1)
+        }, 1000)
+        return () => clearInterval(intervalId);
       } catch (error) {
         console.log(error)
       }
@@ -135,7 +140,7 @@ const Carousel = () => {
       console.log(data)
       const marksScored = data.marks_scored
       const totalMarks = data.total_marks
-      const marks = [marksScored, totalMarks]
+      const marks = [marksScored, totalMarks, seconds]
       navigate('/AssessmentDone', { state: { questions: questionsData, marks } });
     } catch (error) {
       console.log(error)
@@ -160,6 +165,9 @@ const Carousel = () => {
 
   return (
     <div>
+      <div style={styles.container}>
+        <p style={styles.timerText}>Timer: {seconds} seconds</p>
+      </div>
       <Slider className='p-4' ref={sliderRef} {...settings}>
         {questionsData.map((questionObj, questionIndex) => (
           <>
@@ -300,6 +308,17 @@ const Carousel = () => {
       <br />
     </div>
   );
+};
+const styles = {
+  container: {
+    textAlign: 'center',
+    marginTop: '20px',
+  },
+  timerText: {
+    fontSize: '20px',
+    fontWeight: 'bold',
+    color: '#333',
+  },
 };
 
 export default Carousel;

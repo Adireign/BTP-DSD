@@ -11,6 +11,7 @@ const AssessmentDone = () => {
     const { questions, marks } = useLocation().state
     const marksScored = marks[0]
     const totalMarks = marks[1]
+    const seconds = marks[2]
     const percentage = (marksScored / totalMarks) * 100
     const handleClick1 = () => {
         console.log(questions)
@@ -65,7 +66,7 @@ const AssessmentDone = () => {
         <div>
             <div class="bg-white py-24 sm:py-32">
                 <div class="mx-auto max-w-7xl px-6 lg:px-8">
-                    <dl class="grid grid-cols-1 gap-x-8 gap-y-16 text-center lg:grid-cols-3">
+                    <dl class="grid grid-cols-1 gap-x-8 gap-y-16 text-center lg:grid-cols-4">
                         <div class="mx-auto flex max-w-xs flex-col gap-y-4">
                             <dt class="text-base leading-7 text-gray-600">Total questions</dt>
                             <dd class="order-first text-3xl font-semibold tracking-tight text-gray-900 sm:text-5xl">{totalMarks}</dd>
@@ -77,6 +78,10 @@ const AssessmentDone = () => {
                         <div class="mx-auto flex max-w-xs flex-col gap-y-4">
                             <dt class="text-base leading-7 text-gray-600">Percentage secured</dt>
                             <dd class="order-first text-3xl font-semibold tracking-tight text-gray-900 sm:text-5xl">{percentage}%</dd>
+                        </div>
+                        <div class="mx-auto flex max-w-xs flex-col gap-y-4">
+                            <dt class="text-base leading-7 text-gray-600">Time taken</dt>
+                            <dd class="order-first text-3xl font-semibold tracking-tight text-gray-900 sm:text-5xl">{seconds}s</dd>
                         </div>
                     </dl>
                 </div>
