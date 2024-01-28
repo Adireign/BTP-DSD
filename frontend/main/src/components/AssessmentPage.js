@@ -124,7 +124,7 @@ const Carousel = () => {
 
     console.log(completeFeedback)
     try {
-      const response = await fetch("http://localhost:5000/submit_assessment", {
+      const response = await fetch("https://btp-dsd-xukb-server.vercel.app/submit_assessment", {
         method: 'POST',
         headers: {
           'Content-Type': 'application/json',
