@@ -9,7 +9,7 @@ const QuizForm = () => {
   const [numQuestions, setNumQuestions] = useState('');
   const [generated, setgenerated] = useState(0)
   const navigate = useNavigate()
-  
+
 
   const handleTagClick = (tag) => {
     if (selectedTags.includes(tag)) {
@@ -43,7 +43,7 @@ const QuizForm = () => {
 
     try {
       // Send POST request to the Flask server
-      const response = await fetch('https://btp-dsd-server.vercel.app/submit_quiz', {
+      const response = await fetch(`${process.env.REACT_APP_API_URL}/submit_quiz`, {
         method: 'POST',
         headers: {
           'Content-Type': 'application/json',

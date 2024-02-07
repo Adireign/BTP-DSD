@@ -4,6 +4,7 @@ from reportlab.pdfgen import canvas
 
 import Number_System.numerSystemFinal
 import Boolean_Algebra.booleanAlgebraFinal
+import FlipFlops.flipflops
 import Theory.theory
 import io
 import os
@@ -101,9 +102,9 @@ def generate_question(level,tags):
     elif flag == 2:
         return Boolean_Algebra.booleanAlgebraFinal.generate_question_boolean_algebra(level)
     elif flag == 3:
-        return Number_System.numerSystemFinal.generate_question_number_system(level)
+        return FlipFlops.flipflops.generate_question_flipflops(level)
     elif flag == 4:
-        return Theory.theory.generate_question_theory(level)
+        return FlipFlops.flipflops.generate_question_flipflops(level)
     elif flag == 5:
         return Theory.theory.generate_question_theory(level)
 

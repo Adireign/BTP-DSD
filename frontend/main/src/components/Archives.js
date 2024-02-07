@@ -8,7 +8,7 @@ const FileList = () => {
   useEffect(() => {
     const fetchFiles = async () => {
       try {
-        const response = await axios.get('https://btp-dsd-server.vercel.app/pdf-files');
+        const response = await axios.get(`${process.env.REACT_APP_API_URL}/pdf-files`);
         const sortedFiles = response.data.sort((a, b) => {
           const timeA = new Date(a.createdAt).getTime();
           const timeB = new Date(b.createdAt).getTime();

@@ -29,7 +29,7 @@ questions = [
     {
         "question": "A register capable of increasing or decreasing it's contents is",
         "options": ["A. Counter", "B. Decoder", "C. Multiplexer", "D. Demultiplexer"],
-        "correct_answer": "B. Decoder",
+        "correct_answer": "A. Counter",
     },
     {
         "question": "What type of number syste is represented by base 8",
@@ -49,7 +49,7 @@ questions = [
     {
         "question": "A register capable of increasing or decreasing it's contents is",
         "options": ["A. Counter", "B. Decoder", "C. Multiplexer", "D. Demultiplexer"],
-        "correct_answer": "B. Decoder"
+        "correct_answer": "A. Counter"
     },
     {
         "question": "For a particular design of multiplication unit with 6 bit multiplicand and 3 bit multiplier What is the worst case number of adders required for the design and what would be the size of those adders ?",
