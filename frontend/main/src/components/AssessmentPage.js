@@ -113,13 +113,13 @@ const Carousel = () => {
     completeFeedback.feedback4 = feedback4
     for (let i = 0; i < Object.keys(selectedOptions).length; i++) {
       let key = i.toString()
-      if (questionsData[i].answer[0][0] == 'A') {
+      if (questionsData[i].answer[0][0] === 'A') {
         completeFeedback.correctOptions[key] = "0"
       }
-      else if (questionsData[i].answer[0][0] == 'B') {
+      else if (questionsData[i].answer[0][0] === 'B') {
         completeFeedback.correctOptions[key] = "1"
       }
-      else if (questionsData[i].answer[0][0] == 'C') {
+      else if (questionsData[i].answer[0][0] === 'C') {
         completeFeedback.correctOptions[key] = "2"
       }
       else {
