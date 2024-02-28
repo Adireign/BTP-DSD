@@ -5,23 +5,14 @@ import 'slick-carousel/slick/slick.css';
 import 'slick-carousel/slick/slick-theme.css';
 import { useLocation, useNavigate } from 'react-router-dom';
 import AssessmentDone from './AssessmentDone';
+import "./test.css"
 
-// const questionsData = [
-//   {
-//     question: 'What is the capital of France?',
-//     options: ['A. Berlin', 'B. London', 'C. Paris', 'D. Madrid'],
-//     answer: ['A. Berlin']
-//   },
-//   {
-//     question: 'Which programming language is this code written in?',
-//     options: ['A. Java', 'B. Python', 'C. JavaScript', 'D. C++'],
-//     answer: ['C. JavaScript']
-//   },
-//   // Add more questions as needed
-// ];
+const emojis = ['😍', '😂', '😲', '😢', '😡'];
+
 
 const Carousel = () => {
   const navigate = useNavigate()
+  const [selectedData, setSelectedData] = useState(null);
   const [questionsData, setQuestionsData] = useState([])
   const { numQuestions, selectedTags, selectedLevel } = useLocation().state;
   const [selectedOptions, setSelectedOptions] = useState([]);
@@ -39,6 +30,44 @@ const Carousel = () => {
     feedback3: {},
     feedback4: {},
   }
+  const [isHovering1, setIsHovering1] = useState(false);
+  const [isHovering2, setIsHovering2] = useState(false);
+  const [isHovering3, setIsHovering3] = useState(false);
+  const [isHovering4, setIsHovering4] = useState(false);
+
+  const handleMouseEnter1 = () => {
+    setIsHovering1(true);
+  };
+
+  const handleMouseLeave1 = () => {
+    setIsHovering1(false);
+  };
+
+  const handleMouseEnter2 = () => {
+    setIsHovering2(true);
+  };
+
+  const handleMouseLeave2 = () => {
+    setIsHovering2(false);
+  };
+
+  const handleMouseEnter3 = () => {
+    setIsHovering3(true);
+  };
+
+  const handleMouseLeave3 = () => {
+    setIsHovering3(false);
+  };
+
+  const handleMouseEnter4 = () => {
+    setIsHovering4(true);
+  };
+
+  const handleMouseLeave4 = () => {
+    setIsHovering4(false);
+  };
+
+
 
   useEffect(() => {
     const fetchQuestionData = async () => {
@@ -72,6 +101,8 @@ const Carousel = () => {
     console.error('questionsData is not an array:', questionsData);
     return null; // or handle the error in another way
   }
+
+
 
   const handleOptionSelect = (questionIndex, optionIndex) => {
     setSelectedOptions((prevSelectedOptions) => ({
@@ -206,95 +237,95 @@ const Carousel = () => {
             </div>
             <div className="mt-20 pl-2">
               <b>Feedback</b>
-              <div className='feeback1'>
-                <p className="mb-2">Was the question helpful?</p>
-                <label className="mr-4">
-                  <input
-                    type="radio"
-                    name={`feedback1_${questionIndex}`}
-                    value="helpful"
-                    onChange={() => handleFeedbackChange1(questionIndex, 'helpful')}
-                  />
-                  Helpful
-                </label>
-                <label className="mr-4">
-                  <input
-                    type="radio"
-                    name={`feedback1_${questionIndex}`}
-                    value="not_helpful"
-                    onChange={() =>
-                      handleFeedbackChange1(questionIndex, 'not_helpful')
-                    }
-                  />
-                  Not Helpful
-                </label>
-              </div>
-              <div className='feedback2'>
-                <p className="mt-4 mb-2">Was the question Ambiguous?</p>
-                <label className="mr-4">
-                  <input
-                    type="radio"
-                    name={`feedback2_${questionIndex}`}
-                    value="Ambiguous"
-                    onChange={() => handleFeedbackChange2(questionIndex, 'Ambiguous')}
-                  />
-                  Ambiguous
-                </label>
-                <label className="mr-4">
-                  <input
-                    type="radio"
-                    name={`feedback2_${questionIndex}`}
-                    value="not_Ambiguous"
-                    onChange={() =>
-                      handleFeedbackChange2(questionIndex, 'not_Ambiguous')
-                    }
-                  />
-                  Not Ambiguous
-                </label>
+              {/* Feedback-1 */}
+              <div className="border border-gray-200 rounded-lg shadow-md p-4 relative hover:shadow-lg transition duration-300" onMouseEnter={handleMouseEnter1} onMouseLeave={handleMouseLeave1}>
+                <div className="mb-4 text-gray-800">
+                  Was this question Helpful?
+                </div>
+
+                {isHovering1 && (
+                  <div className="absolute bottom-0 right-0 flex space-x-2">
+                    {emojis.map((emoji, index) => (
+                      <span key={index} onClick={() => handleFeedbackChange1(questionIndex, emoji)} className="cursor-pointer text-xl">
+                        {emoji}
+                      </span>
+                    ))}
+                  </div>
+                )}
+
+                {feedback1 && (
+                  <div className="mt-2 text-lg text-gray-700 font-medium">
+                    You selected: {feedback1[questionIndex]}
+                  </div>
+                )}
               </div>
 
-              <p className="mt-4 mb-2">Were choices easy to eliminate?</p>
-              <label className="mr-4">
-                <input
-                  type="radio"
-                  name={`feedback3_${questionIndex}`}
-                  value="easy_to_eliminate"
-                  onChange={() => handleFeedbackChange3(questionIndex, 'easy_to_eliminate')}
-                />
-                easy to eliminate
-              </label>
-              <label className="mr-4">
-                <input
-                  type="radio"
-                  name={`feedback3_${questionIndex}`}
-                  value="not_easy_to_eliminate"
-                  onChange={() =>
-                    handleFeedbackChange3(questionIndex, 'not_easy_to_eliminate')
-                  }
-                />
-                Not easy to eliminate
-              </label>
-              <p className="mt-4 mb-2">Was the question Lengthy?</p>
-              <label className="mr-4">
-                <input
-                  type="radio"
-                  name={`feedback4_${questionIndex}`}
-                  value="lenghty"
-                  onChange={() => handleFeedbackChange4(questionIndex, 'lenghty')}
-                />
-                Lenghty
-              </label>
-              <label className="mr-4">
-                <input
-                  type="radio"
-                  name={`feedback4_${questionIndex}`}
-                  value="not_lenghty"
-                  onChange={() =>
-                    handleFeedbackChange4(questionIndex, 'not_lenghty')
-                  }
-                />
-                Not lenghty
-              </label>
+              <div className="border border-gray-200 rounded-lg shadow-md p-4 relative hover:shadow-lg transition duration-300" onMouseEnter={handleMouseEnter2} onMouseLeave={handleMouseLeave2}>
+                <div className="mb-4 text-gray-800">
+                  Was the question ambiguous?
+                </div>
+
+                {isHovering2 && (
+                  <div className="absolute bottom-0 right-0 flex space-x-2">
+                    {emojis.map((emoji, index) => (
+                      <span key={index} onClick={() => handleFeedbackChange2(questionIndex, emoji)} className="cursor-pointer text-xl">
+                        {emoji}
+                      </span>
+                    ))}
+                  </div>
+                )}
+
+                {feedback2 && (
+                  <div className="mt-2 text-lg text-gray-700 font-medium">
+                    You selected: {feedback2[questionIndex]}
+                  </div>
+                )}
+              </div>
+
+              <div className="border border-gray-200 rounded-lg shadow-md p-4 relative hover:shadow-lg transition duration-300" onMouseEnter={handleMouseEnter3} onMouseLeave={handleMouseLeave3}>
+                <div className="mb-4 text-gray-800">
+                  Was the question lengthy?
+                </div>
+
+                {isHovering3 && (
+                  <div className="absolute bottom-0 right-0 flex space-x-2">
+                    {emojis.map((emoji, index) => (
+                      <span key={index} onClick={() => handleFeedbackChange3(questionIndex, emoji)} className="cursor-pointer text-xl">
+                        {emoji}
+                      </span>
+                    ))}
+                  </div>
+                )}
+
+                {feedback3 && (
+                  <div className="mt-2 text-lg text-gray-700 font-medium">
+                    You selected: {feedback3[questionIndex]}
+                  </div>
+                )}
+              </div>
+
+              <div className="border border-gray-200 rounded-lg shadow-md p-4 relative hover:shadow-lg transition duration-300" onMouseEnter={handleMouseEnter4} onMouseLeave={handleMouseLeave4}>
+                <div className="mb-4 text-gray-800">
+                  Were choices easy to eliminate?
+                </div>
+
+                {isHovering4 && (
+                  <div className="absolute bottom-0 right-0 flex space-x-2">
+                    {emojis.map((emoji, index) => (
+                      <span key={index} onClick={() => handleFeedbackChange4(questionIndex, emoji)} className="cursor-pointer text-xl">
+                        {emoji}
+                      </span>
+                    ))}
+                  </div>
+                )}
+
+                {feedback4 && (
+                  <div className="mt-2 text-lg text-gray-700 font-medium">
+                    You selected: {feedback4[questionIndex]}
+                  </div>
+                )}
+              </div>
+
             </div>
           </>
         ))}

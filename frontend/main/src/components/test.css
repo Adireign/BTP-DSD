@@ -1,0 +1,33 @@
+/* Post.css */
+.post-container {
+    border: 1px solid #ccc;
+    padding: 10px;
+    margin: 10px;
+    position: relative;
+  }
+  
+  .post-content {
+    margin-bottom: 10px;
+  }
+  
+  .reaction-container {
+    position: absolute;
+    bottom: 0;
+    right: 0;
+  }
+  
+  .reaction {
+    cursor: pointer;
+    margin-right: 5px;
+    font-size: 20px;
+  }
+  
+  .reaction:hover {
+    transform: scale(1.2); /* Add hover effect */
+  }
+  
+  .selected-emoji {
+    margin-top: 5px;
+    font-size: 18px;
+  }
+  
