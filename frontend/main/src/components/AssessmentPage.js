@@ -6,12 +6,14 @@ import 'slick-carousel/slick/slick-theme.css';
 import { useLocation, useNavigate } from 'react-router-dom';
 import AssessmentDone from './AssessmentDone';
 import "./test.css"
+import LoadingAssessment from './LoadingAssessment';
 
 const emojis = ['😍', '😂', '😲', '😢', '😡'];
 
 
 const Carousel = () => {
   const navigate = useNavigate()
+  const [loading, setLoading] = useState(true)
   const [selectedData, setSelectedData] = useState(null);
   const [questionsData, setQuestionsData] = useState([])
   const { numQuestions, selectedTags, selectedLevel } = useLocation().state;
@@ -75,6 +77,9 @@ const Carousel = () => {
 
   useEffect(() => {
     const fetchQuestionData = async () => {
+      setInterval(() => {
+        setLoading(false)
+      }, 2000)
       const payload = {
         tags: selectedTags,
         level: selectedLevel,
@@ -212,147 +217,154 @@ const Carousel = () => {
 
   return (
     <div>
-      <div style={styles.container}>
-        <p style={styles.timerText}>Timer: {seconds} seconds</p>
-      </div>
-      <Slider className='p-4' ref={sliderRef} {...settings}>
-        {questionsData.map((questionObj, questionIndex) => (
+      {
+        loading ?
+          <LoadingAssessment /> :
           <>
-            <div key={questionIndex} className="bg-gray-200 p-4 rounded shadow">
-              <h2 className="text-2xl font-bold mb-4">{questionObj.question}</h2>
-              <ul>
-                {questionObj.options.map((option, optionIndex) => (
-                  <div
-                    key={optionIndex}
-                    className={`list-disc ml-4 ${selectedOptions[questionIndex] === optionIndex
-                      ? 'text-blue-500 font-bold'
-                      : ''
-                      }`}
-                    onClick={() => handleOptionSelect(questionIndex, optionIndex)}
-                  >
-                    {option}
-                  </div>
-                ))}
-              </ul>
-              <div className="ml-5 mr-5 mt-4 flex justify-between">
-                <button
-                  className="bg-blue-500 text-white px-4 py-2 rounded"
-                  onClick={handlePrev}
-                >
-                  Previous
-                </button>
-                <button
-                  className="bg-blue-500 text-white px-4 py-2 rounded"
-                  onClick={handleNext}
-                >
-                  Next
-                </button>
-              </div>
 
-
+            <div style={styles.container}>
+              <p style={styles.timerText}>Timer: {seconds} seconds</p>
             </div>
-            <div className="mt-20 pl-2">
-              <b>Feedback</b>
-              {/* Feedback-1 */}
-              <div className="border border-gray-200 rounded-lg shadow-md p-4 relative hover:shadow-lg transition duration-300" onMouseEnter={handleMouseEnter1} onMouseLeave={handleMouseLeave1}>
-                <div className="mb-4 text-gray-800">
-                  Was this question Helpful?
-                </div>
+            <Slider className='p-4' ref={sliderRef} {...settings}>
+              {questionsData.map((questionObj, questionIndex) => (
+                <>
+                  <div key={questionIndex} className="bg-gray-200 p-4 rounded shadow">
+                    <h2 className="text-2xl font-bold mb-4">{questionObj.question}</h2>
+                    <ul>
+                      {questionObj.options.map((option, optionIndex) => (
+                        <div
+                          key={optionIndex}
+                          className={`list-disc ml-4 ${selectedOptions[questionIndex] === optionIndex
+                            ? 'text-blue-500 font-bold'
+                            : ''
+                            }`}
+                          onClick={() => handleOptionSelect(questionIndex, optionIndex)}
+                        >
+                          {option}
+                        </div>
+                      ))}
+                    </ul>
+                    <div className="ml-5 mr-5 mt-4 flex justify-between">
+                      <button
+                        className="bg-blue-500 text-white px-4 py-2 rounded"
+                        onClick={handlePrev}
+                      >
+                        Previous
+                      </button>
+                      <button
+                        className="bg-blue-500 text-white px-4 py-2 rounded"
+                        onClick={handleNext}
+                      >
+                        Next
+                      </button>
+                    </div>
 
-                {isHovering1 && (
-                  <div className="absolute bottom-0 right-0 flex space-x-2">
-                    {emojis.map((emoji, index) => (
-                      <span key={index} onClick={() => handleFeedbackChange1(questionIndex, emoji)} className="cursor-pointer text-xl">
-                        {emoji}
-                      </span>
-                    ))}
+
                   </div>
-                )}
+                  <div className="mt-20 pl-2">
+                    <b>Feedback</b>
+                    {/* Feedback-1 */}
+                    <div className="border border-gray-200 rounded-lg shadow-md p-4 relative hover:shadow-lg transition duration-300" onMouseEnter={handleMouseEnter1} onMouseLeave={handleMouseLeave1}>
+                      <div className="mb-4 text-gray-800">
+                        Was this question Helpful?
+                      </div>
 
-                {feedback1 && (
-                  <div className="mt-2 text-lg text-gray-700 font-medium">
-                    You selected: {feedback1[questionIndex]}
+                      {isHovering1 && (
+                        <div className="absolute bottom-0 right-0 flex space-x-2">
+                          {emojis.map((emoji, index) => (
+                            <span key={index} onClick={() => handleFeedbackChange1(questionIndex, emoji)} className="cursor-pointer text-xl">
+                              {emoji}
+                            </span>
+                          ))}
+                        </div>
+                      )}
+
+                      {feedback1 && (
+                        <div className="mt-2 text-lg text-gray-700 font-medium">
+                          You selected: {feedback1[questionIndex]}
+                        </div>
+                      )}
+                    </div>
+
+                    <div className="border border-gray-200 rounded-lg shadow-md p-4 relative hover:shadow-lg transition duration-300" onMouseEnter={handleMouseEnter2} onMouseLeave={handleMouseLeave2}>
+                      <div className="mb-4 text-gray-800">
+                        Was the question ambiguous?
+                      </div>
+
+                      {isHovering2 && (
+                        <div className="absolute bottom-0 right-0 flex space-x-2">
+                          {emojis.map((emoji, index) => (
+                            <span key={index} onClick={() => handleFeedbackChange2(questionIndex, emoji)} className="cursor-pointer text-xl">
+                              {emoji}
+                            </span>
+                          ))}
+                        </div>
+                      )}
+
+                      {feedback2 && (
+                        <div className="mt-2 text-lg text-gray-700 font-medium">
+                          You selected: {feedback2[questionIndex]}
+                        </div>
+                      )}
+                    </div>
+
+                    <div className="border border-gray-200 rounded-lg shadow-md p-4 relative hover:shadow-lg transition duration-300" onMouseEnter={handleMouseEnter3} onMouseLeave={handleMouseLeave3}>
+                      <div className="mb-4 text-gray-800">
+                        Was the question lengthy?
+                      </div>
+
+                      {isHovering3 && (
+                        <div className="absolute bottom-0 right-0 flex space-x-2">
+                          {emojis.map((emoji, index) => (
+                            <span key={index} onClick={() => handleFeedbackChange3(questionIndex, emoji)} className="cursor-pointer text-xl">
+                              {emoji}
+                            </span>
+                          ))}
+                        </div>
+                      )}
+
+                      {feedback3 && (
+                        <div className="mt-2 text-lg text-gray-700 font-medium">
+                          You selected: {feedback3[questionIndex]}
+                        </div>
+                      )}
+                    </div>
+
+                    <div className="border border-gray-200 rounded-lg shadow-md p-4 relative hover:shadow-lg transition duration-300" onMouseEnter={handleMouseEnter4} onMouseLeave={handleMouseLeave4}>
+                      <div className="mb-4 text-gray-800">
+                        Were choices easy to eliminate?
+                      </div>
+
+                      {isHovering4 && (
+                        <div className="absolute bottom-0 right-0 flex space-x-2">
+                          {emojis.map((emoji, index) => (
+                            <span key={index} onClick={() => handleFeedbackChange4(questionIndex, emoji)} className="cursor-pointer text-xl">
+                              {emoji}
+                            </span>
+                          ))}
+                        </div>
+                      )}
+
+                      {feedback4 && (
+                        <div className="mt-2 text-lg text-gray-700 font-medium">
+                          You selected: {feedback4[questionIndex]}
+                        </div>
+                      )}
+                    </div>
+
                   </div>
-                )}
-              </div>
-
-              <div className="border border-gray-200 rounded-lg shadow-md p-4 relative hover:shadow-lg transition duration-300" onMouseEnter={handleMouseEnter2} onMouseLeave={handleMouseLeave2}>
-                <div className="mb-4 text-gray-800">
-                  Was the question ambiguous?
-                </div>
-
-                {isHovering2 && (
-                  <div className="absolute bottom-0 right-0 flex space-x-2">
-                    {emojis.map((emoji, index) => (
-                      <span key={index} onClick={() => handleFeedbackChange2(questionIndex, emoji)} className="cursor-pointer text-xl">
-                        {emoji}
-                      </span>
-                    ))}
-                  </div>
-                )}
-
-                {feedback2 && (
-                  <div className="mt-2 text-lg text-gray-700 font-medium">
-                    You selected: {feedback2[questionIndex]}
-                  </div>
-                )}
-              </div>
-
-              <div className="border border-gray-200 rounded-lg shadow-md p-4 relative hover:shadow-lg transition duration-300" onMouseEnter={handleMouseEnter3} onMouseLeave={handleMouseLeave3}>
-                <div className="mb-4 text-gray-800">
-                  Was the question lengthy?
-                </div>
-
-                {isHovering3 && (
-                  <div className="absolute bottom-0 right-0 flex space-x-2">
-                    {emojis.map((emoji, index) => (
-                      <span key={index} onClick={() => handleFeedbackChange3(questionIndex, emoji)} className="cursor-pointer text-xl">
-                        {emoji}
-                      </span>
-                    ))}
-                  </div>
-                )}
-
-                {feedback3 && (
-                  <div className="mt-2 text-lg text-gray-700 font-medium">
-                    You selected: {feedback3[questionIndex]}
-                  </div>
-                )}
-              </div>
-
-              <div className="border border-gray-200 rounded-lg shadow-md p-4 relative hover:shadow-lg transition duration-300" onMouseEnter={handleMouseEnter4} onMouseLeave={handleMouseLeave4}>
-                <div className="mb-4 text-gray-800">
-                  Were choices easy to eliminate?
-                </div>
-
-                {isHovering4 && (
-                  <div className="absolute bottom-0 right-0 flex space-x-2">
-                    {emojis.map((emoji, index) => (
-                      <span key={index} onClick={() => handleFeedbackChange4(questionIndex, emoji)} className="cursor-pointer text-xl">
-                        {emoji}
-                      </span>
-                    ))}
-                  </div>
-                )}
-
-                {feedback4 && (
-                  <div className="mt-2 text-lg text-gray-700 font-medium">
-                    You selected: {feedback4[questionIndex]}
-                  </div>
-                )}
-              </div>
-
-            </div>
+                </>
+              ))}
+            </Slider>
+            <button
+              className="mb-5 ml-5 mr-5 bg-blue-500 text-white px-4 py-2 mt-2 rounded"
+              onClick={handleSubmit}
+            >
+              Submit Quiz
+            </button>
+            <br />
           </>
-        ))}
-      </Slider>
-      <button
-        className="mb-5 ml-5 mr-5 bg-blue-500 text-white px-4 py-2 mt-2 rounded"
-        onClick={handleSubmit}
-      >
-        Submit Quiz
-      </button>
-      <br />
+      }
     </div>
   );
 };
