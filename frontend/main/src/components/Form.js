@@ -85,7 +85,7 @@ const QuizForm = () => {
   return (
     <div>
       <div class="relative isolate px-6 lg:px-8">
-        <div class="mx-auto max-w-2xl py-16 sm:py-24 lg:py-20">
+        <div class="mt-5">
           <div class="hidden sm:mb-8 sm:flex sm:justify-center">
             <div class="relative rounded-full px-3 text-sm leading-6 text-gray-600 ring-1 ring-gray-900/10 hover:ring-gray-900/20">
               More about out plan:   <a href="#" class="font-semibold text-indigo-600"><span class="absolute inset-0" aria-hidden="true"></span>Read more <span aria-hidden="true">&rarr;</span></a>

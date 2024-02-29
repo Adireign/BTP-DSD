@@ -68,6 +68,10 @@ const Carousel = () => {
   };
 
 
+  const [answeredQuestions, setAnsweredQuestions] = useState([]);
+  const [numberOfQuestions, setNumberOfQuestions] = useState(0);
+
+
 
   useEffect(() => {
     const fetchQuestionData = async () => {
@@ -193,6 +197,18 @@ const Carousel = () => {
     slidesToShow: 1,
     slidesToScroll: 1,
   };
+  const handleAnswerQuestion = (questionId) => {
+    // Mark the question as answered
+    setAnsweredQuestions([...answeredQuestions, questionId]);
+  };
+  const QuestionBox = ({ questionNumber, isAnswered, onClick }) => (
+    <div
+      className={`question-box ${isAnswered ? 'answered' : ''}`}
+      onClick={onClick}
+    >
+      {questionNumber}
+    </div>
+  );
 
   return (
     <div>
