@@ -71,6 +71,17 @@ def submit_assessment():
     firstdone = 0
     total_marks = 0
     marks_scored = 0
+    values = [['Name:',data['name'],'Email:',data['email']]]
+    result = sheets_service.spreadsheets().values().get(
+            spreadsheetId=SPREADSHEET_ID, range=range_
+        ).execute()
+    values_in_sheet = result.get('values', [])
+    last_row_index = len(values_in_sheet)
+    new_range = f'{range_}!A{last_row_index + 1}'
+    sheets_service.spreadsheets().values().update(
+        spreadsheetId=SPREADSHEET_ID, range=new_range,
+        body={'values': values}, valueInputOption='RAW'
+    ).execute()
     for key,values in data['feedback1'].items():
         idx = int(key)
         total_marks = total_marks + 1
@@ -83,15 +94,24 @@ def submit_assessment():
         ).execute()
         values_in_sheet = result.get('values', [])
         last_row_index = len(values_in_sheet)
-        if firstdone == 0:
-            last_row_index = last_row_index+1
         new_range = f'{range_}!A{last_row_index + 1}'
         sheets_service.spreadsheets().values().update(
             spreadsheetId=SPREADSHEET_ID, range=new_range,
             body={'values': values}, valueInputOption='RAW'
         ).execute()
-        firstdone = 1
-
+        
+    values = [['Total Questions:',total_marks,'Marks Scored',marks_scored]]
+    result = sheets_service.spreadsheets().values().get(
+            spreadsheetId=SPREADSHEET_ID, range=range_
+        ).execute()
+    values_in_sheet = result.get('values', [])
+    last_row_index = len(values_in_sheet)
+    new_range = f'{range_}!A{last_row_index + 1}'
+    sheets_service.spreadsheets().values().update(
+        spreadsheetId=SPREADSHEET_ID, range=new_range,
+        body={'values': values}, valueInputOption='RAW'
+    ).execute()
+    last_row_index = last_row_index+1
 
     return jsonify({'total_marks': total_marks, 'marks_scored': marks_scored})
 

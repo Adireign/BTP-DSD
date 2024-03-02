@@ -74,7 +74,7 @@ const Firstpage = () => {
                                             </div>
                                         </div>
                                     </div>
-                                    <QuizForm />
+                                    <QuizForm loggedInName={loggedInName} loggedInEmail={loggedInEmail}/>
                                 </div>
                             ) : (
                                 <div class="bg-white py-24 sm:py-32">

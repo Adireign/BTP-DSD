@@ -47,18 +47,15 @@ function App() {
         <Route path='/team' index element={
           <>
             <UpperNav />
-            {/* <Topic/> */}
           </>
         } />
         <Route path='/AssessmentPage' index element={
           <>
-            <UpperNav />
             <AssessmentPage />
           </>
         } />
         <Route path='/AssessmentDone' index element={
           <>
-            <UpperNav />
             <AssessmentDone />
           </>
         } />

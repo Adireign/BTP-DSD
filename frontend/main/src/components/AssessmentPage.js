@@ -7,6 +7,7 @@ import { useLocation, useNavigate } from 'react-router-dom';
 import AssessmentDone from './AssessmentDone';
 import "./test.css"
 import LoadingAssessment from './LoadingAssessment';
+import UpperNav from './UpperNav';
 
 const emojis = ['😍', '😂', '😲', '😢', '😡'];
 
@@ -16,7 +17,7 @@ const Carousel = () => {
   const [loading, setLoading] = useState(true)
   const [selectedData, setSelectedData] = useState(null);
   const [questionsData, setQuestionsData] = useState([])
-  const { numQuestions, selectedTags, selectedLevel } = useLocation().state;
+  const { numQuestions, selectedTags, selectedLevel, loggedInName, loggedInEmail } = useLocation().state;
   const [selectedOptions, setSelectedOptions] = useState([]);
   const [feedback1, setFeedback1] = useState({});
   const [feedback2, setFeedback2] = useState({});
@@ -31,6 +32,8 @@ const Carousel = () => {
     feedback2: {},
     feedback3: {},
     feedback4: {},
+    name: {},
+    email: {},
   }
   const [isHovering1, setIsHovering1] = useState(false);
   const [isHovering2, setIsHovering2] = useState(false);
@@ -151,6 +154,9 @@ const Carousel = () => {
     completeFeedback.feedback2 = feedback2
     completeFeedback.feedback3 = feedback3
     completeFeedback.feedback4 = feedback4
+    completeFeedback.name = loggedInName
+    completeFeedback.email = loggedInEmail
+
     for (let i = 0; i < Object.keys(selectedOptions).length; i++) {
       let key = i.toString()
       if (questionsData[i].answer[0][0] === 'A') {
@@ -181,7 +187,7 @@ const Carousel = () => {
       const marksScored = data.marks_scored
       const totalMarks = data.total_marks
       const marks = [marksScored, totalMarks, seconds]
-      navigate('/AssessmentDone', { state: { questions: questionsData, marks } });
+      navigate('/AssessmentDone', { state: { questions: questionsData, marks, loggedInName, loggedInEmail } });
     } catch (error) {
       console.log(error)
     }
@@ -221,7 +227,7 @@ const Carousel = () => {
         loading ?
           <LoadingAssessment /> :
           <>
-
+            <UpperNav name={loggedInName} email={loggedInEmail}/>
             <div style={styles.container}>
               <p style={styles.timerText}>Timer: {seconds} seconds</p>
             </div>

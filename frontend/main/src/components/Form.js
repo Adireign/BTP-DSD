@@ -3,11 +3,12 @@ import { Link } from 'react-router-dom';
 import { useNavigate } from 'react-router-dom';
 import UpperNav from './UpperNav';
 
-const QuizForm = () => {
+const QuizForm = (props) => {
   const [selectedTags, setSelectedTags] = useState([]);
   const [selectedLevel, setSelectedLevel] = useState(null);
   const [numQuestions, setNumQuestions] = useState('');
   const [generated, setgenerated] = useState(0)
+  const {loggedInName,loggedInEmail} = props
   const navigate = useNavigate()
 
 
@@ -72,7 +73,7 @@ const QuizForm = () => {
       numQuestions: numQuestions,
     };
     try {
-      navigate('/AssessmentPage', { state: { numQuestions, selectedTags, selectedLevel } })
+      navigate('/AssessmentPage', { state: { numQuestions, selectedTags, selectedLevel, loggedInName, loggedInEmail } })
     } catch (error) {
       console.log(error)
     }

@@ -7,12 +7,13 @@ import { useState } from 'react';
 import { useEffect } from 'react';
 import LoadingAssessment from './LoadingAssessment';
 import LoadingResult from './LoadingResult';
+import UpperNav from './UpperNav';
 
 
 const AssessmentDone = () => {
     const navigate = useNavigate()
     const [loading, setLoading] = useState(true)
-    const { questions, marks } = useLocation().state
+    const { questions, marks, loggedInName, loggedInEmail } = useLocation().state
     const marksScored = marks[0]
     const totalMarks = marks[1]
     const seconds = marks[2]
@@ -76,7 +77,7 @@ const AssessmentDone = () => {
             {loading ?
                 <LoadingResult /> :
                 <>
-
+                    <UpperNav name={loggedInName} email={loggedInEmail}/>
                     <div class="bg-white py-24 sm:py-32">
                         <div class="mx-auto max-w-7xl px-6 lg:px-8">
                             <dl class="grid grid-cols-1 gap-x-8 gap-y-16 text-center lg:grid-cols-4">
