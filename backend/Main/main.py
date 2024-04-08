@@ -25,3 +25,28 @@ def main(selected_tags,num_questions,level):
 
 if __name__ == "__main__":
     print("here")
+
+import os
+
+def create_python_file(filename):
+    if not filename.endswith('.py'):
+        filename += '.py'
+    cwd = os.getcwd()
+    folder_path = os.path.join(cwd, filename[:-3])
+    os.makedirs(folder_path, exist_ok=True)
+    filepath = os.path.join(folder_path, filename)
+
+    if os.path.exists(filepath):
+        print(f"File '{filename}' already exists.")
+        return
+
+    code = """
+# def generate_question_"""+filename+"""(level):
+# return q,o,a
+
+# if __name__ == "__main__":
+# ans = generate_question_"""+filename+"""(1)
+# print(ans)
+"""
+    with open(filepath, 'w') as f:
+        f.write(code)
