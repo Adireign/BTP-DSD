@@ -9,12 +9,23 @@ class var:
     
 #############    utilities for boolean algebra (conversions from one form to another and evaluations)
 
+def get_starting_character(num_vars):
+    rnd = random.randint(1,3)
+    if rnd == 1:
+        character = 'A'
+    elif rnd == 2:
+        character = chr(ord('Z') - num_vars)
+    else:
+        character = 'M'
+    return character
+
 def gen_random_exp(num_vars): #generating in postfix
     limit=random.randint(1,5) # lim on terms
     vars=[]
+    character = get_starting_character(num_vars)
     for i in range (num_vars):
-        vars.append(var(chr(ord('A')+i), "+"))
-        vars.append(var(chr(ord('A')+i), "-"))
+        vars.append(var(chr(ord(character)+i), "+"))
+        vars.append(var(chr(ord(character)+i), "-"))
     stack=[]
     st_vars=0
     st_op=0
@@ -49,10 +60,9 @@ def print_exp(exp):
         else:
             string=val.symbol
             if val.sign=="-":
-                string="~"+string
+                string=string+"'"
             stack.append(string)
             
-    # print(stack[0])
     sys.stdout = sys.__stdout__
     captured_output = output_buffer.getvalue()
     return stack[0]
@@ -66,6 +76,7 @@ def gen_random_truth_table(num_vars):   #num_vars uptill 26 only for now.. pract
         list.append(random.randint(0,1))
         table.append(list)
     return table
+
 
 def minterm_to_table(minterms, num_vars):
     table=[]
@@ -83,6 +94,7 @@ def minterm_to_table(minterms, num_vars):
 def gen_sop(table):
     num_vars=len(table[0])-1
     sop=[]
+    character = get_starting_character(num_vars)
     for i in range (len(table)):
         if table[i][num_vars]==1:
             prod=[]
@@ -91,7 +103,7 @@ def gen_sop(table):
                     sym="+"
                 else:
                     sym="-"
-                prod.append(var(chr(ord('A')+val), sym))
+                prod.append(var(chr(ord(character)+val), sym))
             sop.append(prod)
     return sop
 
@@ -99,6 +111,7 @@ def gen_sop(table):
 def gen_pos(table):
     num_vars=len(table[0])-1
     pos=[]
+    character = get_starting_character(num_vars)
     for i in range (len(table)):
         if table[i][num_vars]==0:
             prod=[]
@@ -107,7 +120,7 @@ def gen_pos(table):
                     sym="+"
                 else:
                     sym="-"
-                prod.append(var(chr(ord('A')+val), sym))
+                prod.append(var(chr(ord(character)+val), sym))
             pos.append(prod)
     return pos
 
@@ -118,9 +131,9 @@ def print_sop(sop):
     for i, prod in enumerate(sop):
         print("(", end="")
         for j, vars in enumerate(prod):
-            if vars.sign=="-":
-                print("~", end="")
             print("{0}".format(vars.symbol), end="")
+            if vars.sign=="-":
+                print("'", end="")
             if j!=len(prod)-1:
                 print(".", end="")
         print(")", end="")
@@ -131,6 +144,7 @@ def print_sop(sop):
     captured_output = output_buffer.getvalue()
     return captured_output
 
+print(print_sop(gen_sop(gen_random_truth_table(4))))
 
 def print_pos(pos):
     output_buffer = io.StringIO()
@@ -138,9 +152,9 @@ def print_pos(pos):
     for i, prod in enumerate(pos):
         print("(", end="")
         for j, vars in enumerate(prod):
-            if vars.sign=="-":
-                print("~", end="")
             print("{0}".format(vars.symbol), end="")
+            if vars.sign=="-":
+                print("'", end="")
             if j!=len(prod)-1:
                 print("+", end="")
         print(")", end="")
@@ -162,6 +176,7 @@ def table_to_minterms(table):
 
 
 ######################   utilities for qm method   #############################
+
 def mul(x,y):
     res = []
     for i in x:
@@ -543,7 +558,7 @@ def evaluate():
     mapy['B']=random.randint(0,1)
     mapy['C']=random.randint(0,1)
     mapy['D']=random.randint(0,1)
-    question="What does the expression {0}evaluate to, When ".format(final_exp)
+    question="What does the expression {0} evaluate to, When ".format(final_exp)
     for i in range(num_vars):
         if(i==0):
             question+="A={0} ".format(mapy['A'])
