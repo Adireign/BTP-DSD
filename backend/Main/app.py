@@ -71,7 +71,8 @@ def submit_assessment():
     firstdone = 0
     total_marks = 0
     marks_scored = 0
-    values = [['Name:',data['name'],'Email:',data['email']]]
+    values = [['Name:',data['name'],'Email:',data['email'],'Type:',data['type']]]
+    # print(data['type'])
     result = sheets_service.spreadsheets().values().get(
             spreadsheetId=SPREADSHEET_ID, range=range_
         ).execute()

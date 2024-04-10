@@ -17,13 +17,14 @@ const Carousel = () => {
   const [loading, setLoading] = useState(true)
   const [selectedData, setSelectedData] = useState(null);
   const [questionsData, setQuestionsData] = useState([])
-  const { numQuestions, selectedTags, selectedLevel, loggedInName, loggedInEmail } = useLocation().state;
+  const { numQuestions, selectedTags, selectedLevel, loggedInName, loggedInEmail, loggedInType } = useLocation().state;
   const [selectedOptions, setSelectedOptions] = useState([]);
   const [feedback1, setFeedback1] = useState({});
   const [feedback2, setFeedback2] = useState({});
   const [feedback3, setFeedback3] = useState({});
   const [feedback4, setFeedback4] = useState({});
   const [seconds, setSeconds] = useState(0);
+  const [currentQuestion, setCurrentQuestion] = useState(0); // Current question index
   const sliderRef = useRef(null);
   const completeFeedback = {
     selectedOptions: {},
@@ -34,6 +35,7 @@ const Carousel = () => {
     feedback4: {},
     name: {},
     email: {},
+    type: 'student',
   }
   const [isHovering1, setIsHovering1] = useState(false);
   const [isHovering2, setIsHovering2] = useState(false);
@@ -117,10 +119,9 @@ const Carousel = () => {
 
 
   const handleOptionSelect = (questionIndex, optionIndex) => {
-    setSelectedOptions((prevSelectedOptions) => ({
-      ...prevSelectedOptions,
-      [questionIndex]: optionIndex,
-    }));
+    const newSelectedOptions = [...selectedOptions];
+    newSelectedOptions[questionIndex] = optionIndex;
+    setSelectedOptions(newSelectedOptions);
   };
 
   const handleFeedbackChange1 = (questionIndex, feedbackType) => {
@@ -148,6 +149,10 @@ const Carousel = () => {
     }));
   };
 
+  const handleQuestionChange = (index) => {
+    setCurrentQuestion(index); // Update current question index
+  };
+
   const handleSubmit = async () => {
     completeFeedback.selectedOptions = selectedOptions
     completeFeedback.feedback1 = feedback1
@@ -156,6 +161,7 @@ const Carousel = () => {
     completeFeedback.feedback4 = feedback4
     completeFeedback.name = loggedInName
     completeFeedback.email = loggedInEmail
+    completeFeedback.type = loggedInType
 
     for (let i = 0; i < Object.keys(selectedOptions).length; i++) {
       let key = i.toString()
@@ -182,6 +188,7 @@ const Carousel = () => {
         },
         body: JSON.stringify(completeFeedback)
       })
+      console.log(loggedInType)
       const data = await response.json()
       console.log(data)
       const marksScored = data.marks_scored
@@ -193,12 +200,15 @@ const Carousel = () => {
     }
   };
 
-  const handleNext = () => {
-    sliderRef.current.slickNext();
+  const handlePrev = () => {
+    setCurrentQuestion((prevQuestion) => Math.max(0, prevQuestion - 1));
   };
 
-  const handlePrev = () => {
-    sliderRef.current.slickPrev();
+  const handleNext = () => {
+    setCurrentQuestion((prevQuestion) => Math.min(questionsData.length - 1, prevQuestion + 1));
+  };
+  const handleDirectNavigation = (questionIndex) => {
+    setCurrentQuestion(questionIndex);
   };
 
   const settings = {
@@ -207,10 +217,6 @@ const Carousel = () => {
     speed: 500,
     slidesToShow: 1,
     slidesToScroll: 1,
-  };
-  const handleAnswerQuestion = (questionId) => {
-    // Mark the question as answered
-    setAnsweredQuestions([...answeredQuestions, questionId]);
   };
   const QuestionBox = ({ questionNumber, isAnswered, onClick }) => (
     <div
@@ -227,141 +233,106 @@ const Carousel = () => {
         loading ?
           <LoadingAssessment /> :
           <>
-            <UpperNav name={loggedInName} email={loggedInEmail}/>
+            <UpperNav name={loggedInName} email={loggedInEmail} />
             <div style={styles.container}>
               <p style={styles.timerText}>Timer: {seconds} seconds</p>
             </div>
-            <Slider className='p-4' ref={sliderRef} {...settings}>
+
+            <div className="p-4">
+              <div className="navigation-bar mb-4">
+                {questionsData.map((_, index) => (
+                  <button
+                    key={index}
+                    className={`nav-button ${index === currentQuestion ? 'active' : ''} ${selectedOptions[index] !== null ? 'answered' : 'unanswered'}`}
+                    onClick={() => handleDirectNavigation(index)}
+                    style={{
+                      backgroundColor: index === currentQuestion ? '#4CAF50' : selectedOptions[index] !== null ? '#2196F3' : '#ddd',
+                      color: index === currentQuestion ? 'white' : selectedOptions[index] !== null ? 'white' : 'black',
+                      border: 'none',
+                      borderRadius: '5px',
+                      padding: '10px 20px',
+                      margin: '5px',
+                      cursor: 'pointer',
+                      transition: 'background-color 0.3s',
+                    }}
+                  >
+                    {`Question ${index + 1}`}
+                    {selectedOptions[index] != null ? (
+                      <span style={{ marginLeft: '5px' }}>✔️</span>
+                    ) : (
+                      <span style={{ marginLeft: '5px', color: '#FF5733' }}>❌</span> // Changing the color of the cross sign
+                    )}
+                  </button>
+                ))}
+              </div>
+
+
+
+
               {questionsData.map((questionObj, questionIndex) => (
-                <>
-                  <div key={questionIndex} className="bg-gray-200 p-4 rounded shadow">
-                    <h2 className="text-2xl font-bold mb-4">{questionObj.question}</h2>
-                    <ul>
-                      {questionObj.options.map((option, optionIndex) => (
-                        <div
-                          key={optionIndex}
-                          className={`list-disc ml-4 ${selectedOptions[questionIndex] === optionIndex
-                            ? 'text-blue-500 font-bold'
-                            : ''
-                            }`}
-                          onClick={() => handleOptionSelect(questionIndex, optionIndex)}
-                        >
-                          {option}
-                        </div>
-                      ))}
-                    </ul>
-                    <div className="ml-5 mr-5 mt-4 flex justify-between">
-                      <button
-                        className="bg-blue-500 text-white px-4 py-2 rounded"
-                        onClick={handlePrev}
+                <div key={questionIndex} className={`bg-gray-200 p-4 rounded shadow ${questionIndex === currentQuestion ? 'block' : 'hidden'}`}>
+                  <h2 className="text-2xl font-bold mb-4">Q{questionIndex + 1}: {questionObj.question}</h2>
+                  <ul>
+                    {questionObj.options.map((option, optionIndex) => (
+                      <div
+                        key={optionIndex}
+                        className={`list-disc ml-4 ${selectedOptions[questionIndex] === optionIndex ? 'text-blue-500 font-bold' : ''}`}
+                        onClick={() => handleOptionSelect(questionIndex, optionIndex)}
                       >
-                        Previous
-                      </button>
-                      <button
-                        className="bg-blue-500 text-white px-4 py-2 rounded"
-                        onClick={handleNext}
-                      >
-                        Next
-                      </button>
-                    </div>
-
+                        {option}
+                      </div>
+                    ))}
+                  </ul>
+                  <div className="mb-5 ml-5 mr-5 mt-4 flex justify-between">
+                    <button
+                      className="bg-blue-500 text-white px-4 py-2 rounded"
+                      onClick={handlePrev}
+                      disabled={currentQuestion === 0}
+                    >
+                      Previous
+                    </button>
+                    <button
+                      className="bg-blue-500 text-white px-4 py-2 rounded"
+                      onClick={handleNext}
+                      disabled={currentQuestion === questionsData.length - 1}
+                    >
+                      Next
+                    </button>
+                    {/* Add direct navigation buttons */}
+                    {/* <button
+                      className="bg-blue-500 text-white px-4 py-2 rounded"
+                      onClick={() => handleDirectNavigation(questionIndex)}
+                    >
+                      {`Question ${questionIndex + 1}`}
+                    </button> */}
 
                   </div>
-                  <div className="mt-20 pl-2">
-                    <b>Feedback</b>
-                    {/* Feedback-1 */}
-                    <div className="border border-gray-200 rounded-lg shadow-md p-4 relative hover:shadow-lg transition duration-300" onMouseEnter={handleMouseEnter1} onMouseLeave={handleMouseLeave1}>
-                      <div className="mb-4 text-gray-800">
-                        Was this question Helpful?
-                      </div>
-
-                      {isHovering1 && (
-                        <div className="absolute bottom-0 right-0 flex space-x-2">
-                          {emojis.map((emoji, index) => (
-                            <span key={index} onClick={() => handleFeedbackChange1(questionIndex, emoji)} className="cursor-pointer text-xl">
-                              {emoji}
-                            </span>
-                          ))}
-                        </div>
-                      )}
-
-                      {feedback1 && (
-                        <div className="mt-2 text-lg text-gray-700 font-medium">
-                          You selected: {feedback1[questionIndex]}
-                        </div>
-                      )}
+                  <div className="border border-gray-200 rounded-lg shadow-md p-4 relative hover:shadow-lg transition duration-300" onMouseEnter={handleMouseEnter1} onMouseLeave={handleMouseLeave1}>
+                    <div className="mb-4 text-gray-800">
+                      Please rate this question?
                     </div>
 
-                    <div className="border border-gray-200 rounded-lg shadow-md p-4 relative hover:shadow-lg transition duration-300" onMouseEnter={handleMouseEnter2} onMouseLeave={handleMouseLeave2}>
-                      <div className="mb-4 text-gray-800">
-                        Was the question ambiguous?
+                    {isHovering1 && (
+                      <div className="absolute bottom-0 right-0 flex space-x-2">
+                        {emojis.map((emoji, index) => (
+                          <span key={index} onClick={() => handleFeedbackChange1(questionIndex, emoji)} className="cursor-pointer text-xl">
+                            {emoji}
+                          </span>
+                        ))}
                       </div>
+                    )}
 
-                      {isHovering2 && (
-                        <div className="absolute bottom-0 right-0 flex space-x-2">
-                          {emojis.map((emoji, index) => (
-                            <span key={index} onClick={() => handleFeedbackChange2(questionIndex, emoji)} className="cursor-pointer text-xl">
-                              {emoji}
-                            </span>
-                          ))}
-                        </div>
-                      )}
-
-                      {feedback2 && (
-                        <div className="mt-2 text-lg text-gray-700 font-medium">
-                          You selected: {feedback2[questionIndex]}
-                        </div>
-                      )}
-                    </div>
-
-                    <div className="border border-gray-200 rounded-lg shadow-md p-4 relative hover:shadow-lg transition duration-300" onMouseEnter={handleMouseEnter3} onMouseLeave={handleMouseLeave3}>
-                      <div className="mb-4 text-gray-800">
-                        Was the question lengthy?
+                    {feedback1 && (
+                      <div className="mt-2 text-lg text-gray-700 font-medium">
+                        You selected: {feedback1[questionIndex]}
                       </div>
-
-                      {isHovering3 && (
-                        <div className="absolute bottom-0 right-0 flex space-x-2">
-                          {emojis.map((emoji, index) => (
-                            <span key={index} onClick={() => handleFeedbackChange3(questionIndex, emoji)} className="cursor-pointer text-xl">
-                              {emoji}
-                            </span>
-                          ))}
-                        </div>
-                      )}
-
-                      {feedback3 && (
-                        <div className="mt-2 text-lg text-gray-700 font-medium">
-                          You selected: {feedback3[questionIndex]}
-                        </div>
-                      )}
-                    </div>
-
-                    <div className="border border-gray-200 rounded-lg shadow-md p-4 relative hover:shadow-lg transition duration-300" onMouseEnter={handleMouseEnter4} onMouseLeave={handleMouseLeave4}>
-                      <div className="mb-4 text-gray-800">
-                        Were choices easy to eliminate?
-                      </div>
-
-                      {isHovering4 && (
-                        <div className="absolute bottom-0 right-0 flex space-x-2">
-                          {emojis.map((emoji, index) => (
-                            <span key={index} onClick={() => handleFeedbackChange4(questionIndex, emoji)} className="cursor-pointer text-xl">
-                              {emoji}
-                            </span>
-                          ))}
-                        </div>
-                      )}
-
-                      {feedback4 && (
-                        <div className="mt-2 text-lg text-gray-700 font-medium">
-                          You selected: {feedback4[questionIndex]}
-                        </div>
-                      )}
-                    </div>
-
+                    )}
                   </div>
-                </>
+                </div>
+
               ))}
-            </Slider>
+
+            </div>
             <button
               className="mb-5 ml-5 mr-5 bg-blue-500 text-white px-4 py-2 mt-2 rounded"
               onClick={handleSubmit}

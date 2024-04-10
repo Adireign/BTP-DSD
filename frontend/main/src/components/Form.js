@@ -8,7 +8,8 @@ const QuizForm = (props) => {
   const [selectedLevel, setSelectedLevel] = useState(null);
   const [numQuestions, setNumQuestions] = useState('');
   const [generated, setgenerated] = useState(0)
-  const {loggedInName,loggedInEmail} = props
+  const {loggedInName,loggedInEmail,loggedInType} = props
+
   const navigate = useNavigate()
 
 
@@ -67,13 +68,14 @@ const QuizForm = (props) => {
 
   const handleStartAssessment = async (event) => {
     // Create payload to send to the server
+    console.log(loggedInName)
     const payload = {
       tags: selectedTags,
       level: selectedLevel,
       numQuestions: numQuestions,
     };
     try {
-      navigate('/AssessmentPage', { state: { numQuestions, selectedTags, selectedLevel, loggedInName, loggedInEmail } })
+      navigate('/AssessmentPage', { state: { numQuestions, selectedTags, selectedLevel, loggedInName, loggedInEmail, loggedInType } })
     } catch (error) {
       console.log(error)
     }

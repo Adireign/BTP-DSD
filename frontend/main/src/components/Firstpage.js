@@ -5,6 +5,7 @@ import UpperNav from './UpperNav';
 import QuizForm from './Form';
 import { useEffect } from 'react';
 import Loading from './Loading';
+import './OptionSelector.css';
 
 const clientId = '1099148463228-fniq392tv0qv5hlbm084r9m8tp8ph0ls.apps.googleusercontent.com';
 const Firstpage = () => {
@@ -12,6 +13,8 @@ const Firstpage = () => {
     const [loggedInName, setLoggedInName] = useState('')
     const [loggedInEmail, setLoggedInEmail] = useState('')
     const [loading, setLoading] = useState(true)
+    const [selectedOption, setSelectedOption] = useState(null);
+    const [clickedImage, setClickedImage] = useState(0);
 
     const onSuccessLogin = (res) => {
         console.log("Login Success current user:")
@@ -31,6 +34,13 @@ const Firstpage = () => {
         setLoggedInEmail('')
         setLoggedInName('')
     }
+    const handleOptionSelect = (option) => {
+        setSelectedOption(option);
+        if (option === 'student-non-engneering') {
+            setClickedImage(1);
+        }
+    };
+
     useEffect(() => {
         // Simulate loading delay (you can replace this with your actual data loading logic)
         setTimeout(() => {
@@ -74,12 +84,46 @@ const Firstpage = () => {
                                             </div>
                                         </div>
                                     </div>
-                                    <QuizForm loggedInName={loggedInName} loggedInEmail={loggedInEmail}/>
+                                    <QuizForm loggedInName={loggedInName} loggedInEmail={loggedInEmail} loggedInType={selectedOption}/>
                                 </div>
                             ) : (
                                 <div class="bg-white py-24 sm:py-32">
+                                    <div className="option-selector-container">
+                                        <h2><b>Please Select your category</b></h2>
+                                        <div className="options">
+                                            <div
+                                                className={`option ${selectedOption === 'Engineering Student' ? 'selected' : ''}`}
+                                                onClick={() => handleOptionSelect('Engineering Student')}
+                                            >
+                                                Engineering Student
+                                            </div>
+                                            <div
+                                                className={`option ${selectedOption === 'Non-Engineering Student' ? 'selected' : ''}`}
+                                                onClick={() => handleOptionSelect('Non-Engineering Student')}
+                                            >
+                                                Non-Engineering Student
+                                            </div>
+                                            <div
+                                                className={`option ${selectedOption === 'Faculty' ? 'selected' : ''}`}
+                                                onClick={() => handleOptionSelect('Faculty')}
+                                            >
+                                                Faculty
+                                            </div>
+                                            <div
+                                                className={`option ${selectedOption === 'Industry Person' ? 'selected' : ''}`}
+                                                onClick={() => handleOptionSelect('Industry Person')}
+                                            >
+                                                Industry Person
+                                            </div>
+                                        </div>
+                                        {/* <p>You selected: {selectedOption}</p> */}
+                                        <br/>
+                                    </div>
                                     <div class="mx-auto max-w-7xl px-6 lg:px-8">
                                         <div class="mx-auto max-w-2xl lg:text-center">
+                                            <p class="mt-4 text-3xl font-bold tracking-tight text-gray-900 sm:text-4xl">Attempt Your personalized quiz and assess yourself</p>
+                                            <p class="mt-6 text-lg leading-8 text-gray-600 mb-3">Sign in using any of your google account to generate quiz. You can also start an assessment and generate your marks.</p>
+
                                             <h2 class="text-base font-semibold leading-7 text-indigo-600"><GoogleLogin
                                                 clientId={clientId}
                                                 buttonText="Sign in with Google"
@@ -88,8 +132,6 @@ const Firstpage = () => {
                                                 cookiePolicy={'single_host_origin'}
                                                 isSignedIn={true}
                                             /></h2>
-                                            <p class="mt-4 text-3xl font-bold tracking-tight text-gray-900 sm:text-4xl">Attempt Your personalized quiz and assess yourself</p>
-                                            <p class="mt-6 text-lg leading-8 text-gray-600">Sign in using any of your google account to generate quiz. You can also start an assessment and generate your marks.</p>
                                         </div>
                                     </div>
                                 </div>
