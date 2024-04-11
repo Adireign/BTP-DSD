@@ -6,6 +6,11 @@ import QuizForm from './Form';
 import { useEffect } from 'react';
 import Loading from './Loading';
 import './OptionSelector.css';
+import engineeringStudentImage from './Student_engineering.png'
+import nonEngineeringStudentImage from './Student.webp';
+import facultyImage from './Faculty.jpg';
+import industryPersonImage from './Industry.jpg';
+import './Firstpage.css'
 
 const clientId = '1099148463228-fniq392tv0qv5hlbm084r9m8tp8ph0ls.apps.googleusercontent.com';
 const Firstpage = () => {
@@ -84,7 +89,7 @@ const Firstpage = () => {
                                             </div>
                                         </div>
                                     </div>
-                                    <QuizForm loggedInName={loggedInName} loggedInEmail={loggedInEmail} loggedInType={selectedOption}/>
+                                    <QuizForm loggedInName={loggedInName} loggedInEmail={loggedInEmail} loggedInType={selectedOption} />
                                 </div>
                             ) : (
                                 <div class="bg-white py-24 sm:py-32">
@@ -95,29 +100,41 @@ const Firstpage = () => {
                                                 className={`option ${selectedOption === 'Engineering Student' ? 'selected' : ''}`}
                                                 onClick={() => handleOptionSelect('Engineering Student')}
                                             >
+                                                <div className="image-container">
+                                                    <img src={engineeringStudentImage} alt="Engineering Student" />
+                                                </div>
                                                 Engineering Student
                                             </div>
                                             <div
                                                 className={`option ${selectedOption === 'Non-Engineering Student' ? 'selected' : ''}`}
                                                 onClick={() => handleOptionSelect('Non-Engineering Student')}
                                             >
+                                                <div className="image-container">
+                                                    <img src={nonEngineeringStudentImage} alt="Non-Engineering Student" />
+                                                </div>
                                                 Non-Engineering Student
                                             </div>
                                             <div
                                                 className={`option ${selectedOption === 'Faculty' ? 'selected' : ''}`}
                                                 onClick={() => handleOptionSelect('Faculty')}
                                             >
+                                                <div className="image-container">
+                                                    <img src={facultyImage} alt="Faculty" />
+                                                </div>
                                                 Faculty
                                             </div>
                                             <div
                                                 className={`option ${selectedOption === 'Industry Person' ? 'selected' : ''}`}
                                                 onClick={() => handleOptionSelect('Industry Person')}
                                             >
+                                                <div className="image-container">
+                                                    <img src={industryPersonImage} alt="Industry Person" />
+                                                </div>
                                                 Industry Person
                                             </div>
                                         </div>
                                         {/* <p>You selected: {selectedOption}</p> */}
-                                        <br/>
+                                        <br />
                                     </div>
                                     <div class="mx-auto max-w-7xl px-6 lg:px-8">
                                         <div class="mx-auto max-w-2xl lg:text-center">

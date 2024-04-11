@@ -256,7 +256,7 @@ const Carousel = () => {
                       transition: 'background-color 0.3s',
                     }}
                   >
-                    {`Question ${index + 1}`}
+                    {`Q ${index + 1}`}
                     {selectedOptions[index] != null ? (
                       <span style={{ marginLeft: '5px' }}>✔️</span>
                     ) : (
