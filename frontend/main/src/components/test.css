@@ -1,33 +1,35 @@
-/* Post.css */
-.post-container {
-    border: 1px solid #ccc;
-    padding: 10px;
-    margin: 10px;
-    position: relative;
-  }
-  
-  .post-content {
-    margin-bottom: 10px;
-  }
-  
-  .reaction-container {
-    position: absolute;
-    bottom: 0;
-    right: 0;
-  }
-  
-  .reaction {
-    cursor: pointer;
-    margin-right: 5px;
-    font-size: 20px;
-  }
-  
-  .reaction:hover {
-    transform: scale(1.2); /* Add hover effect */
-  }
-  
-  .selected-emoji {
-    margin-top: 5px;
-    font-size: 18px;
-  }
-  
+.emoji-button-container {
+  position: relative;
+}
+
+.emoji-button {
+  font-size: 24px;
+  background-color: transparent;
+  border: none;
+  cursor: pointer;
+}
+
+.emoji-options {
+  position: absolute;
+  top: 100%;
+  left: 50%;
+  transform: translateX(-50%);
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  background-color: white;
+  padding: 5px;
+  border: 1px solid #ccc;
+  border-radius: 5px;
+  box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1);
+}
+
+.emoji-options span {
+  font-size: 24px;
+  margin: 5px;
+  cursor: pointer;
+}
+
+.emoji-options span:hover {
+  transform: scale(1.2);
+}

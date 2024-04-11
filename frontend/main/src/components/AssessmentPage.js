@@ -5,7 +5,7 @@ import 'slick-carousel/slick/slick.css';
 import 'slick-carousel/slick/slick-theme.css';
 import { useLocation, useNavigate } from 'react-router-dom';
 import AssessmentDone from './AssessmentDone';
-import "./test.css"
+// import "./test.css"
 import LoadingAssessment from './LoadingAssessment';
 import UpperNav from './UpperNav';
 
@@ -17,30 +17,23 @@ const Carousel = () => {
   const [loading, setLoading] = useState(true)
   const [selectedData, setSelectedData] = useState(null);
   const [questionsData, setQuestionsData] = useState([])
-  const { numQuestions, selectedTags, selectedLevel, loggedInName, loggedInEmail, loggedInType } = useLocation().state;
+  const {numQuestions, selectedTags, selectedLevel, loggedInName, loggedInEmail, loggedInType } = useLocation().state;
   const [selectedOptions, setSelectedOptions] = useState([]);
   const [feedback1, setFeedback1] = useState({});
-  const [feedback2, setFeedback2] = useState({});
-  const [feedback3, setFeedback3] = useState({});
-  const [feedback4, setFeedback4] = useState({});
   const [seconds, setSeconds] = useState(0);
   const [currentQuestion, setCurrentQuestion] = useState(0); // Current question index
   const sliderRef = useRef(null);
+
   const completeFeedback = {
     selectedOptions: {},
     correctOptions: {},
     feedback1: {},
-    feedback2: {},
-    feedback3: {},
-    feedback4: {},
     name: {},
     email: {},
     type: 'student',
+    questionBodies: {},
   }
   const [isHovering1, setIsHovering1] = useState(false);
-  const [isHovering2, setIsHovering2] = useState(false);
-  const [isHovering3, setIsHovering3] = useState(false);
-  const [isHovering4, setIsHovering4] = useState(false);
 
   const handleMouseEnter1 = () => {
     setIsHovering1(true);
@@ -49,36 +42,6 @@ const Carousel = () => {
   const handleMouseLeave1 = () => {
     setIsHovering1(false);
   };
-
-  const handleMouseEnter2 = () => {
-    setIsHovering2(true);
-  };
-
-  const handleMouseLeave2 = () => {
-    setIsHovering2(false);
-  };
-
-  const handleMouseEnter3 = () => {
-    setIsHovering3(true);
-  };
-
-  const handleMouseLeave3 = () => {
-    setIsHovering3(false);
-  };
-
-  const handleMouseEnter4 = () => {
-    setIsHovering4(true);
-  };
-
-  const handleMouseLeave4 = () => {
-    setIsHovering4(false);
-  };
-
-
-  const [answeredQuestions, setAnsweredQuestions] = useState([]);
-  const [numberOfQuestions, setNumberOfQuestions] = useState(0);
-
-
 
   useEffect(() => {
     const fetchQuestionData = async () => {
@@ -130,38 +93,14 @@ const Carousel = () => {
       [questionIndex]: feedbackType,
     }));
   };
-  const handleFeedbackChange2 = (questionIndex, feedbackType) => {
-    setFeedback2((prevFeedback) => ({
-      ...prevFeedback,
-      [questionIndex]: feedbackType,
-    }));
-  };
-  const handleFeedbackChange3 = (questionIndex, feedbackType) => {
-    setFeedback3((prevFeedback) => ({
-      ...prevFeedback,
-      [questionIndex]: feedbackType,
-    }));
-  };
-  const handleFeedbackChange4 = (questionIndex, feedbackType) => {
-    setFeedback4((prevFeedback) => ({
-      ...prevFeedback,
-      [questionIndex]: feedbackType,
-    }));
-  };
-
-  const handleQuestionChange = (index) => {
-    setCurrentQuestion(index); // Update current question index
-  };
 
   const handleSubmit = async () => {
     completeFeedback.selectedOptions = selectedOptions
     completeFeedback.feedback1 = feedback1
-    completeFeedback.feedback2 = feedback2
-    completeFeedback.feedback3 = feedback3
-    completeFeedback.feedback4 = feedback4
     completeFeedback.name = loggedInName
     completeFeedback.email = loggedInEmail
     completeFeedback.type = loggedInType
+    completeFeedback.questionBodies = questionsData
 
     for (let i = 0; i < Object.keys(selectedOptions).length; i++) {
       let key = i.toString()
@@ -298,32 +237,28 @@ const Carousel = () => {
                     >
                       Next
                     </button>
-                    {/* Add direct navigation buttons */}
-                    {/* <button
-                      className="bg-blue-500 text-white px-4 py-2 rounded"
-                      onClick={() => handleDirectNavigation(questionIndex)}
-                    >
-                      {`Question ${questionIndex + 1}`}
-                    </button> */}
 
                   </div>
-                  <div className="border border-gray-200 rounded-lg shadow-md p-4 relative hover:shadow-lg transition duration-300" onMouseEnter={handleMouseEnter1} onMouseLeave={handleMouseLeave1}>
-                    <div className="mb-4 text-gray-800">
-                      Please rate this question?
-                    </div>
+                  <div className="border border-blue-200 rounded-lg shadow-md p-4 relative hover:shadow-lg transition duration-300" style={{ width: '20%' }} onMouseEnter={handleMouseEnter1} onMouseLeave={handleMouseLeave1}>
+                    <div className="mb-4 text-blue-800">
+                      Rate this?
 
                     {isHovering1 && (
-                      <div className="absolute bottom-0 right-0 flex space-x-2">
-                        {emojis.map((emoji, index) => (
-                          <span key={index} onClick={() => handleFeedbackChange1(questionIndex, emoji)} className="cursor-pointer text-xl">
-                            {emoji}
-                          </span>
-                        ))}
+                      <div className="relative">
+
+                        <div className="absolute bottom-0 right-0">
+                          {emojis.map((emoji, index) => (
+                            <span key={index} onClick={() => handleFeedbackChange1(questionIndex, emoji)} className="cursor-pointer text-xl">
+                              {emoji}
+                            </span>
+                          ))}
+                        </div>
                       </div>
                     )}
+                    </div>
 
                     {feedback1 && (
-                      <div className="mt-2 text-lg text-gray-700 font-medium">
+                      <div className="mt-2 text-lg text-blue-700 font-medium">
                         You selected: {feedback1[questionIndex]}
                       </div>
                     )}
@@ -340,6 +275,7 @@ const Carousel = () => {
               Submit Quiz
             </button>
             <br />
+
           </>
       }
     </div>
