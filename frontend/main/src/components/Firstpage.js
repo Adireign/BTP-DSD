@@ -1,5 +1,5 @@
 import React from 'react'
-import { GoogleLogin, GoogleLogout } from 'react-google-login';
+// import { GoogleLogin, GoogleLogout } from 'react-google-login';
 import { useState } from 'react';
 import UpperNav from './UpperNav';
 import QuizForm from './Form';
@@ -21,30 +21,39 @@ const Firstpage = () => {
     const [selectedOption, setSelectedOption] = useState(null);
     const [clickedImage, setClickedImage] = useState(0);
 
-    const onSuccessLogin = (res) => {
-        console.log("Login Success current user:")
-        const { name, email } = res.profileObj
-        console.log("name: ", name)
-        console.log("email", email)
-        setLoggedInEmail(email)
-        setLoggedInName(name)
-        setIsLoggedIn(true)
-    }
-    const onFailureLogin = (res) => {
-        console.log("Login failed", res)
-    }
-    const onSuccessLogout = () => {
-        console.log("logout done")
-        setIsLoggedIn(false)
-        setLoggedInEmail('')
-        setLoggedInName('')
-    }
+    // const onSuccessLogin = (res) => {
+    //     console.log("Login Success current user:")
+    //     const { name, email } = res.profileObj
+    //     console.log("name: ", name)
+    //     console.log("email", email)
+    //     setLoggedInEmail(email)
+    //     setLoggedInName(name)
+    //     setIsLoggedIn(true)
+    // }
+    // const onFailureLogin = (res) => {
+    //     console.log("Login failed", res)
+    // }
+    // const onSuccessLogout = () => {
+    //     console.log("logout done")
+    //     setIsLoggedIn(false)
+    //     setLoggedInEmail('')
+    //     setLoggedInName('')
+    // }
     const handleOptionSelect = (option) => {
         setSelectedOption(option);
         if (option === 'student-non-engneering') {
             setClickedImage(1);
         }
     };
+    const handleGo = () =>{
+        if(selectedOption==null){
+            alert('Please select one of the option')
+            return
+        }
+        setLoggedInName('dummy-1')
+        setLoggedInEmail('dummy-2')
+        setIsLoggedIn(true)
+    }
 
     useEffect(() => {
         // Simulate loading delay (you can replace this with your actual data loading logic)
@@ -66,7 +75,7 @@ const Firstpage = () => {
                                     <div className='relative isolate px-60 lg:px-8'>
                                         <div class="mt-5">
                                             <div class="hidden sm:flex sm:justify-center">
-                                                <div class=" px-3 text-sm leading-6 text-gray-600 ring-1 ring-gray-900/10 hover:ring-gray-900/20">
+                                                {/* <div class=" px-3 text-sm leading-6 text-gray-600 ring-1 ring-gray-900/10 hover:ring-gray-900/20">
                                                     <GoogleLogout
                                                         clientId={clientId}
                                                         buttonText="Logout"
@@ -84,7 +93,7 @@ const Firstpage = () => {
                                                         isSignedIn={true}
                                                     />
 
-                                                </div>
+                                                </div> */}
 
                                             </div>
                                         </div>
@@ -134,6 +143,12 @@ const Firstpage = () => {
                                             </div>
                                         </div>
                                         {/* <p>You selected: {selectedOption}</p> */}
+                                        <button
+                                            onClick={handleGo}
+                                            className="mt-4 ml-8 rounded-md bg-indigo-600 px-3.5 py-2.5 text-sm font-semibold text-white shadow-sm hover:bg-indigo-500 focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-indigo-600"
+                                        >
+                                            Go!
+                                        </button>
                                         <br />
                                     </div>
                                     <div class="mx-auto max-w-7xl px-6 lg:px-8">
@@ -141,14 +156,14 @@ const Firstpage = () => {
                                             <p class="mt-4 text-3xl font-bold tracking-tight text-gray-900 sm:text-4xl">Attempt Your personalized quiz and assess yourself</p>
                                             <p class="mt-6 text-lg leading-8 text-gray-600 mb-3">Sign in using any of your google account to generate quiz. You can also start an assessment and generate your marks.</p>
 
-                                            <h2 class="text-base font-semibold leading-7 text-indigo-600"><GoogleLogin
+                                            {/* <h2 class="text-base font-semibold leading-7 text-indigo-600"><GoogleLogin
                                                 clientId={clientId}
                                                 buttonText="Sign in with Google"
                                                 onSuccess={onSuccessLogin}
                                                 onFailure={onFailureLogin}
                                                 cookiePolicy={'single_host_origin'}
                                                 isSignedIn={true}
-                                            /></h2>
+                                            /></h2> */}
                                         </div>
                                     </div>
                                 </div>
