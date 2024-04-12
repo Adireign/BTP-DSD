@@ -26,7 +26,10 @@ const QuizForm = (props) => {
   };
 
   const handleInputChange = (event) => {
-    const inputValue = event.target.value;
+    let inputValue = event.target.value;
+    if(inputValue > 50){
+      inputValue = 50;
+    }
     setNumQuestions(inputValue);
   };
 
@@ -136,8 +139,9 @@ const QuizForm = (props) => {
 
                 {/* Question Input */}
                 <div>
-                  <h3 className="text-lg font-semibold mb-2">Enter Number of Questions</h3>
-                  <form className="display-flex">
+                  <h3 className="text-lg font-semibold">Enter Number of Questions</h3>
+                  
+                  <form className="display-flex mb-2">
                     <label htmlFor="numQuestionsInput" className="text-gray-700 pr-2 ">
                       Questions:
                     </label>
@@ -149,6 +153,7 @@ const QuizForm = (props) => {
                       onChange={handleInputChange}
                     />
                   </form>
+                  <h4 className="mb-2">(maximum 50 questions are allowed per assessment)</h4>
                 </div>
               </div>
 
