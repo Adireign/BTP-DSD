@@ -3,7 +3,8 @@ import { useLocation, useNavigate } from 'react-router-dom';
 import LoadingAssessment from './LoadingAssessment';
 import UpperNav from './UpperNav';
 
-const emojis = ['😍', '😂', '😲', '😢', '😡'];
+const emojis = ['😁', '😖', '⏲️', '😢','❓'];
+const meanings = ['Easy','Difficult','Time consuming','Out of Scope','Ambiguous'];
 
 const AssessmentPage = () => {
   const navigate = useNavigate();
@@ -169,6 +170,16 @@ const AssessmentPage = () => {
     setCurrentQuestion(questionIndex);
   };
 
+  const [hoveredEmoji, setHoveredEmoji] = useState(null);
+
+  const handleHover = (index) => {
+    return () => setHoveredEmoji(meanings[index]);
+  };
+
+  const handleMouseOut = () => {
+    setHoveredEmoji(null);
+  };
+
   return (
     <div>
       {loading ? (
@@ -249,19 +260,24 @@ const AssessmentPage = () => {
                     <div className="mb-4 text-blue-800">
                       Rate this?
                       {isHovering1 && (
-                        <div className="relative">
-                          <div className="absolute bottom-0 right-0">
-                            {emojis.map((emoji, index) => (
-                              <span key={index} onClick={() => handleFeedbackChange1(questionIndex, emoji)} className="cursor-pointer text-xl">
-                                {emoji}
-                              </span>
-                            ))}
-                          </div>
-                        </div>
+                        <div className="display-flex absolute mb-5">
+                        {emojis.map((emoji, index) => (
+                          <span
+                            key={index}
+                            onMouseOver={handleHover(index)}
+                            onMouseOut={handleMouseOut}
+                            onClick={() => handleFeedbackChange1(questionIndex, emoji)}
+                            className="cursor-pointer text-xl"
+                          >
+                            {emoji}
+                          </span>
+                        ))}
+                        {hoveredEmoji && <div className="tooltip">{hoveredEmoji}</div>}
+                      </div>
                       )}
                     </div>
                     {feedback1 && (
-                      <div className="mt-2 text-lg text-blue-700 font-medium">
+                      <div className="pt-10 text-lg text-black-700 font-medium">
                         You selected: {feedback1[questionIndex]}
                       </div>
                     )}
