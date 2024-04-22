@@ -6,6 +6,7 @@ import Number_System.numerSystemFinal
 import Boolean_Algebra.booleanAlgebraFinal
 import FlipFlops.flipflops
 import Theory.theory
+import LogicGates.logicGatesQuestions
 import io
 import os
 pdf_folder = "./PDF"
@@ -102,7 +103,7 @@ def generate_question(level,tags):
     elif flag == 2:
         return Boolean_Algebra.booleanAlgebraFinal.generate_question_boolean_algebra(level)
     elif flag == 3:
-        return FlipFlops.flipflops.generate_question_flipflops(level)
+        return LogicGates.logicGatesQuestions.generate_question_logic_gates(level)
     elif flag == 4:
         return FlipFlops.flipflops.generate_question_flipflops(level)
     elif flag == 5:
