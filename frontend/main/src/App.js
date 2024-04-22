@@ -4,7 +4,6 @@ import LevelSelector from "./components/LevelSelection";
 import QuestionInput from "./components/QuestionInput";
 import QuizForm from "./components/Form";
 import FileList from "./components/Archives";
-// import Team from "./components/Team";
 import Topic from "./components/Topic";
 import { Route, Routes } from 'react-router-dom';
 import AssessmentPage from "./components/AssessmentPage";
