@@ -109,7 +109,7 @@ const AssessmentPage = () => {
       type: loggedInType,
       questionBodies: questionsData,
       timeTaken: overallTimer,
-      individualTimeTaken: timeSpentPerQuestion,
+      individualTimeTaken: timeSpentPerQuestion
     };
 
     questionsData.forEach((question, index) => {
