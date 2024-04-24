@@ -71,24 +71,39 @@ def submit_assessment():
     firstdone = 0
     total_marks = 0
     marks_scored = 0
-    values = [['Name:',data['name'],'Email:',data['email']]]
+    values = [['Name:',data['name'],'Email:',data['email'],'Type:',data['type']]]
+    print(data)
     result = sheets_service.spreadsheets().values().get(
             spreadsheetId=SPREADSHEET_ID, range=range_
         ).execute()
     values_in_sheet = result.get('values', [])
     last_row_index = len(values_in_sheet)
+    last_row_index = last_row_index + 1
     new_range = f'{range_}!A{last_row_index + 1}'
     sheets_service.spreadsheets().values().update(
         spreadsheetId=SPREADSHEET_ID, range=new_range,
         body={'values': values}, valueInputOption='RAW'
     ).execute()
+    
+    values = [['index','question','option-A','option-B','option-C','option-D','answer','Time taken per question','feedback']]
+    result = sheets_service.spreadsheets().values().get(
+            spreadsheetId=SPREADSHEET_ID, range=range_
+    ).execute()
+    values_in_sheet = result.get('values', [])
+    last_row_index = len(values_in_sheet)
+    new_range = f'{range_}!A{last_row_index + 1}'
+    sheets_service.spreadsheets().values().update(
+            spreadsheetId=SPREADSHEET_ID, range=new_range,
+            body={'values': values}, valueInputOption='RAW'
+    ).execute()
+    
     for key,values in data['feedback1'].items():
         idx = int(key)
         total_marks = total_marks + 1
-        if int(data['selectedOptions'][key]) == int(data['correctOptions'][key]):
+        if int(data['selectedOptions'][idx]) == int(data['correctOptions'][key]):
             marks_scored = marks_scored + 1
             
-        values = [[idx+1,data['feedback1'][key],data['feedback2'][key],data['feedback3'][key],data['feedback4'][key]]]
+        values = [[idx+1,data['questionBodies'][idx]['question'],data['questionBodies'][idx]['options'][0],data['questionBodies'][idx]['options'][1],data['questionBodies'][idx]['options'][2],data['questionBodies'][idx]['options'][3],data['questionBodies'][idx]['answer'],data['individualTimeTaken'][idx],data['feedback1'][key]]]
         result = sheets_service.spreadsheets().values().get(
             spreadsheetId=SPREADSHEET_ID, range=range_
         ).execute()
@@ -100,7 +115,7 @@ def submit_assessment():
             body={'values': values}, valueInputOption='RAW'
         ).execute()
         
-    values = [['Total Questions:',total_marks,'Marks Scored',marks_scored]]
+    values = [['Total Questions:',total_marks,'Marks Scored:',marks_scored,'Total time taken:',data['timeTaken']]]
     result = sheets_service.spreadsheets().values().get(
             spreadsheetId=SPREADSHEET_ID, range=range_
         ).execute()
@@ -127,6 +142,9 @@ def get_pdf_files():
     pdf_files = [file for file in os.listdir('./PDF') if file.endswith('.pdf')]
     return jsonify(pdf_files)
 
+
+if __name__ == '__main__':
+    app.run(debug=True)
 
 
 
