@@ -85,8 +85,8 @@ const QuizForm = (props) => {
 
   }
 
-  const tags = ['Number-System', 'Boolean-algebra', 'Gates', 'Flip-flops', 'Theory'];
-  const levels = ['Level-1', 'Level-2', 'Level-3'];
+  const tags = ['Number-System', 'Boolean-algebra', 'Logic-Gates', 'Theory'];
+  const levels = ['Easy', 'Medium'];
 
   return (
     <div>

@@ -1,5 +1,5 @@
 from flask import Flask, render_template, request, jsonify, send_from_directory, send_file, url_for, redirect
-from flask_cors import CORS
+from flask_cors import CORS, cross_origin
 from reportlab.lib.pagesizes import letter
 from reportlab.pdfgen import canvas
 from main import main
@@ -41,6 +41,7 @@ def starting():
     return "Server is running"
 
 @app.route('/submit_quiz', methods=['POST'])
+@cross_origin(origin='*')
 def submit_quiz():
     data = request.json  
     
@@ -51,6 +52,7 @@ def submit_quiz():
     return jsonify({'message': 'Quiz submitted successfully'})
 
 @app.route('/startAssessment', methods=['POST'])
+@cross_origin(origin='*')
 def startAssessment():
     data = request.json
     print('Received quiz data to generate assessment:', data)
@@ -61,6 +63,7 @@ def startAssessment():
     return jsonify({'questions': questionDetails})
     
 @app.route('/submit_assessment', methods=['POST'])
+@cross_origin(origin='*')
 def submit_assessment():
     data = request.json
     print('Recieved assessment data')
