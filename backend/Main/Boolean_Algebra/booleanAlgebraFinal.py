@@ -19,10 +19,14 @@ def get_starting_character(num_vars):
         character = 'M'
     return character
 
-def gen_random_exp(num_vars): #generating in postfix
+
+def gen_random_exp(num_vars, flag, char): #generating in postfix
     limit=random.randint(1,5) # lim on terms
     vars=[]
-    character = get_starting_character(num_vars)
+    if flag == 0:
+        character = get_starting_character(num_vars)
+    else:
+        character = char
     for i in range (num_vars):
         vars.append(var(chr(ord(character)+i), "+"))
         vars.append(var(chr(ord(character)+i), "-"))
@@ -91,10 +95,13 @@ def minterm_to_table(minterms, num_vars):
     return table
 
 
-def gen_sop(table):
+def gen_sop(table, flag, char):
     num_vars=len(table[0])-1
     sop=[]
-    character = get_starting_character(num_vars)
+    if flag==0:
+        character = get_starting_character(num_vars)
+    else:
+        character = char
     for i in range (len(table)):
         if table[i][num_vars]==1:
             prod=[]
@@ -108,29 +115,47 @@ def gen_sop(table):
     return sop
 
 
-def gen_pos(table):
+def gen_pos(table, flag, char):
     num_vars=len(table[0])-1
     pos=[]
-    character = get_starting_character(num_vars)
+    if flag==0:
+        character = get_starting_character(num_vars)
+    else:
+        character = char
     for i in range (len(table)):
         if table[i][num_vars]==0:
             prod=[]
             for val in range(num_vars):
                 if table[i][val]==1:
-                    sym="+"
-                else:
                     sym="-"
+                else:
+                    sym="+"
                 prod.append(var(chr(ord(character)+val), sym))
             pos.append(prod)
     return pos
+
 
 def gen_sop_numbers(table):
     num_vars = len(table[0])-1
     sop = []
     for i in range (len(table)):
-        if table[i][num_vars]==0:
+        if table[i][num_vars]==1:
             sop.append(i)
     return sop
+
+
+def list_to_table(list, num_vars):
+    table=[]
+    for i in range(2**num_vars):
+        temp=format(i, f'0{num_vars}b')
+        l=[int(bit) for bit in temp]
+        if i in list:
+            l.append(1)
+        else:
+            l.append(0)
+        table.append(l)
+    return table
+
 
 def print_sop(sop):
     output_buffer = io.StringIO()
@@ -151,7 +176,6 @@ def print_sop(sop):
     captured_output = output_buffer.getvalue()
     return captured_output
 
-# print(print_sop(gen_sop(gen_random_truth_table(4))))
 
 def print_pos(pos):
     output_buffer = io.StringIO()
@@ -218,13 +242,13 @@ def findEPI(x):
             res.append(x[i][0]) if x[i][0] not in res else None
     return res
 
-def findVariables(x):
+def findVariables(x, char):
     var_list = []
     for i in range(len(x)):
         if x[i] == '0':
-            var_list.append(chr(i+65)+"'")
+            var_list.append(chr(i+ord(char))+"'")
         elif x[i] == '1':
-            var_list.append(chr(i+65))
+            var_list.append(chr(i+ord(char)))
     return var_list
 
 def flatten(x):
@@ -269,7 +293,7 @@ def removeTerms(_chart,terms):
             except KeyError:
                 pass
 
-def print_QM(mt, dc):
+def print_QM(mt, dc, char):
     mt.sort()
     minterms = mt+dc
     minterms.sort()
@@ -322,34 +346,34 @@ def print_QM(mt, dc):
     removeTerms(chart,EPI)
 
     if(len(chart) == 0):
-        final_result = [findVariables(i) for i in EPI]
+        final_result = [findVariables(i, char) for i in EPI]
     else:
-        P = [[findVariables(j) for j in chart[i]] for i in chart]
+        P = [[findVariables(j, char) for j in chart[i]] for i in chart]
         while len(P)>1:
             P[1] = multiply(P[0],P[1])
             P.pop(0)
         final_result = [min(P[0],key=len)]
-        final_result.extend(findVariables(i) for i in EPI)
+        final_result.extend(findVariables(i, char) for i in EPI)
     return "{0}".format('F = '+' + '.join(''.join(i) for i in final_result))
 
 
-def bit_flip_var(x):
+def bit_flip_var(x, char):
     var_list = []
     for i in range(len(x)):
         if(random.randint(0,1)==0):
             if x[i] == '0':
-                var_list.append(chr(i+65))
+                var_list.append(chr(i+ord(char)))
             elif x[i] == '1':
-                var_list.append(chr(i+65)+"'")
+                var_list.append(chr(i+ord(char))+"'")
         else:
             if x[i] == '0':
-                var_list.append(chr(i+65)+"'")
+                var_list.append(chr(i+ord(char))+"'")
             elif x[i] == '1':
-                var_list.append(chr(i+65))
+                var_list.append(chr(i+ord(char)))
     return var_list
 
 
-def print_QM_distract(mt, dc):
+def print_QM_distract(mt, dc, char):
     mt.sort()
     minterms = mt+dc
     minterms.sort()
@@ -402,14 +426,14 @@ def print_QM_distract(mt, dc):
     removeTerms(chart,EPI)
 
     if(len(chart) == 0):
-        final_result = [bit_flip_var(i) for i in EPI]
+        final_result = [bit_flip_var(i, char) for i in EPI]
     else:
-        P = [[bit_flip_var(j) for j in chart[i]] for i in chart]
+        P = [[bit_flip_var(j, char) for j in chart[i]] for i in chart]
         while len(P)>1:
             P[1] = multiply(P[0],P[1])
             P.pop(0)
         final_result = [min(P[0],key=len)]
-        final_result.extend(bit_flip_var(i) for i in EPI)
+        final_result.extend(bit_flip_var(i, char) for i in EPI)
     return "{0}".format('F = '+' + '.join(''.join(i) for i in final_result))
 
 
@@ -419,7 +443,8 @@ def manipulate_minterms(table):
         if i not in mt and random.randint(0,6)<=1:
             mt.append(i)
         if i in mt and random.randint(0,6)<=1:
-            mt.remove(i)
+            if len(mt)>1:
+                mt.remove(i)
     return mt
 
 
@@ -434,9 +459,12 @@ def manipulate_dc(table):
 
 ####   question templates  ############################
 
-def sop_to_minterm():
-    table = gen_random_truth_table(3)
-    sop = gen_sop(table)
+def sop_to_minterm(level):
+    if level==1:
+        table = gen_random_truth_table(3)
+    else:
+        table = gen_random_truth_table(random.randint(3,4))
+    sop = gen_sop(table, 0, 'A')
     minterms = table_to_minterms(table)
     question = "What are the minterms for the given sop expression: {0}".format(print_sop(sop))
     answer = minterms[0]
@@ -455,30 +483,125 @@ def sop_to_minterm():
         idx = chr(ord(idx) + 1)
     return question, new_options, answer
 
-def sop_to_minterms2():
-    table = gen_random_truth_table(3)
+
+def sop_to_minterm2(level):
+    if level==1:
+        num_vars = 3
+    else:
+        num_vars = random.randint(3,4)
+    table = gen_random_truth_table(num_vars)
     sop = gen_sop_numbers(table)
     minterms = table_to_minterms(table)
     answer = minterms[0]
-    question = "What are the minterms for the given SOP form ?\n SOP = {0}".format(sop)
+    question = "What are the minterms exp for the given SOP form ?\n SOP = {0} (minterms numbers)".format(sop)
     options=[]
     while len(options)<3:
         m=manipulate_dc(table)
         if m:
             options.append(m)
     options.append(minterms[0])
-    random.shuffle(options)
+    char = get_starting_character(num_vars)
+    answer = print_sop(gen_sop(list_to_table(minterms[0], num_vars), 1, char))
+    options2 = []
+    for opt in options:
+        options2.append(print_sop(gen_sop(list_to_table(opt, num_vars), 1, char)))
+    random.shuffle(options2)
     idx = 'A'
     new_options = []
-    for option in options:
+    for option in options2:
         new_option = idx+". "+str(option)
         new_options.append(new_option)
         idx = chr(ord(idx) + 1)
     return question, new_options, answer
 
-def pos_to_minterm():
-    table = gen_random_truth_table(3)
-    pos = gen_pos(table)
+
+def sop_to_maxterm(level):
+    if level==1:
+        num_vars = 3
+    else:
+        num_vars = random.randint(3,4)
+    table = gen_random_truth_table(num_vars)
+    sop = gen_sop(table, 0, 'A')
+    minterms = table_to_minterms(table)
+    question = "What are the maxterms for the given sop expression: {0}".format(print_sop(sop))
+    answer = minterms[0]
+    options=[]
+    while len(options)<3:
+        m=manipulate_dc(table)
+        if m:
+            options.append(m)
+    options.append(minterms[0])
+    options2 = []
+    for opt in options:
+        new_opt = []
+        for i in range(2**num_vars):
+            if i not in opt:
+                new_opt.append(i)
+        options2.append(new_opt)
+    random.shuffle(options2)
+    new_ans = []
+    for i in range(2**num_vars):
+        if i not in answer:
+            new_ans.append(i)
+    idx = 'A'
+    new_options = []
+    for option in options2:
+        new_option = idx+". "+str(option)
+        new_options.append(new_option)
+        idx = chr(ord(idx) + 1)
+    return question, new_options, new_ans
+
+
+def sop_to_maxterm2(level):
+    if level==1:
+        num_vars = 3
+    else:
+        num_vars = random.randint(3,4)
+    table = gen_random_truth_table(num_vars)
+    sop = gen_sop_numbers(table)
+    minterms = table_to_minterms(table)
+    answer = minterms[0]
+    question = "What are the maxterms exp for the given SOP form ?\n SOP = {0} (minterms)".format(sop)
+    answer = minterms[0]
+    options=[]
+    while len(options)<3:
+        m=manipulate_dc(table)
+        if m:
+            options.append(m)
+    options.append(minterms[0])
+    options2 = []
+    for opt in options:
+        new_opt = []
+        for i in range(2**num_vars):
+            if i not in opt:
+                new_opt.append(i)
+        options2.append(new_opt)
+    random.shuffle(options2)
+    new_ans = []
+    for i in range(2**num_vars):
+        if i not in answer:
+            new_ans.append(i)
+
+    char = get_starting_character(num_vars)
+    new_ans = print_pos(gen_pos(list_to_table(minterms[0], num_vars), 1, char))
+    options3 = []
+    for opt in options2:
+        options3.append(print_pos(gen_pos(list_to_table(opt, num_vars), 1, char)))
+    idx = 'A'
+    new_options = []
+    for option in options3:
+        new_option = idx+". "+str(option)
+        new_options.append(new_option)
+        idx = chr(ord(idx) + 1)
+    return question, new_options, new_ans
+
+
+def pos_to_minterm(level):
+    if level==1:
+        table = gen_random_truth_table(3)
+    else:
+        table = gen_random_truth_table(random.randint(3,4))
+    pos = gen_pos(table, 0, 'A')
     minterms = table_to_minterms(table)
     question = "What are the minterms for the given pos expression: {0}".format(print_pos(pos))
     answer = minterms[0]
@@ -497,17 +620,61 @@ def pos_to_minterm():
         idx = chr(ord(idx) + 1)
     return question, new_options, answer
 
-def sop_to_pos():
-    table = gen_random_truth_table(3)
-    sop = gen_sop(table)
+
+def pos_to_maxterm(level):
+    if level==1:
+        num_vars = 3
+    else:
+        num_vars = random.randint(3,4)
+    table = gen_random_truth_table(num_vars)
+    pos = gen_pos(table, 0, 'A')
+    minterms = table_to_minterms(table)
+    question = "What are the maxterms for the given pos expression: {0}".format(print_pos(pos))
+    answer = minterms[0]
+    options=[]
+    while len(options)<3:
+        m=manipulate_dc(table)
+        if m:
+            options.append(m)
+    options.append(minterms[0])
+    options2 = []
+    for opt in options:
+        new_opt = []
+        for i in range(2**num_vars):
+            if i not in opt:
+                new_opt.append(i)
+        options2.append(new_opt)
+
+    random.shuffle(options2)
+    new_ans = []
+    for i in range(2**num_vars):
+        if i not in answer:
+            new_ans.append(i)
+    idx = 'A'
+    new_options = []
+    for option in options2:
+        new_option = idx+". "+str(option)
+        new_options.append(new_option)
+        idx = chr(ord(idx) + 1)
+    return question, new_options, new_ans
+
+
+def sop_to_pos(level):
+    if level==1:
+        num_vars = 3
+    else:
+        num_vars = random.randint(3,4)
+    table = gen_random_truth_table(num_vars)
     minterms, num = table_to_minterms(table)
-    pos = gen_pos(table)
+    char = get_starting_character(num_vars)
+    sop = gen_sop(table, 1, char)
+    pos = gen_pos(table, 1, char)
     question = "Convert the expression {0} to POS form".format(print_sop(sop))
     answer = print_pos(pos)
     options=[]
     options.append(answer)
     for i in range(3):
-        options.append(print_pos(gen_pos(minterm_to_table(manipulate_minterms(table), num))))
+        options.append(print_pos(gen_pos(minterm_to_table(manipulate_minterms(table), num), 1, char)))
     random.shuffle(options)
     idx = 'A'
     new_options = []
@@ -517,17 +684,23 @@ def sop_to_pos():
         idx = chr(ord(idx) + 1)
     return question, new_options, answer
 
-def pos_to_sop():
-    table = gen_random_truth_table(3)
-    sop = gen_sop(table)
+
+def pos_to_sop(level):
+    if level==1:
+        num_vars = 3
+    else:
+        num_vars = random.randint(3,4)
+    table = gen_random_truth_table(num_vars)
     minterms, num = table_to_minterms(table)
-    pos = gen_pos(table)
+    char = get_starting_character(num_vars)
+    sop = gen_sop(table, 1 , char)
+    pos = gen_pos(table, 1, char)
     question = "Convert the expression {0} to SOP form".format(print_pos(pos))
     answer = print_sop(sop)
     options=[]
     options.append(answer)
     for i in range(3):
-        options.append(print_sop(gen_sop(minterm_to_table(manipulate_minterms(table), num))))
+        options.append(print_sop(gen_sop(minterm_to_table(manipulate_minterms(table), num), 1, char)))
     random.shuffle(options)
     idx = 'A'
     new_options = []
@@ -537,16 +710,22 @@ def pos_to_sop():
         idx = chr(ord(idx) + 1)
     return question, new_options, answer
 
-def minterm_to_sop():
-    table = gen_random_truth_table(3)
-    sop = gen_sop(table)
+
+def minterm_to_sop(level):
+    if level==1:
+        num_vars = 3
+    else:
+        num_vars = random.randint(3,4)
+    table = gen_random_truth_table(num_vars)
+    char = get_starting_character(num_vars)
+    sop = gen_sop(table, 1, char)
     minterms, num = table_to_minterms(table)
     question = "The SOP for the given minterms - {0} is?".format(minterms)
     answer = print_sop(sop)
     options=[]
     options.append(answer)
     for i in range(3):
-        options.append(print_sop(gen_sop(minterm_to_table(manipulate_minterms(table), num))))
+        options.append(print_sop(gen_sop(minterm_to_table(manipulate_minterms(table), num), 1, char)))
     random.shuffle(options)
     idx = 'A'
     new_options = []
@@ -556,16 +735,80 @@ def minterm_to_sop():
         idx = chr(ord(idx) + 1)
     return question, new_options, answer
 
-def minterm_to_pos():
-    table = gen_random_truth_table(3)
-    pos = gen_pos(table)
+
+def minterm_to_pos(level):
+    if level==1:
+        num_vars = 3
+    else:
+        num_vars = random.randint(3,4)
+    table = gen_random_truth_table(num_vars)
+    char = get_starting_character(num_vars)
+    pos = gen_pos(table, 1, char)
     minterms, num = table_to_minterms(table)
     question = "The POS for the given minterms - {0} is?".format(minterms)
     answer = print_pos(pos)
     options=[]
     options.append(answer)
     for i in range(3):
-        options.append(print_pos(gen_pos(minterm_to_table(manipulate_minterms(table), num))))
+        options.append(print_pos(gen_pos(minterm_to_table(manipulate_minterms(table), num), 1, char)))
+    random.shuffle(options)
+    idx = 'A'
+    new_options = []
+    for option in options:
+        new_option = idx+". "+str(option)
+        new_options.append(new_option)
+        idx = chr(ord(idx) + 1)
+    return question, new_options, answer
+
+
+def maxterm_to_sop(level):
+    if level==1:
+        num_vars = 3
+    else:
+        num_vars = random.randint(3,4)
+    table = gen_random_truth_table(num_vars)
+    char = get_starting_character(num_vars)
+    sop = gen_sop(table, 1, char)
+    minterms, num = table_to_minterms(table)
+    maxterms = []
+    for i in range(2**num_vars):
+        if i not in minterms:
+            maxterms.append(i)
+    question = "The SOP for the given maxterms - {0} is?".format(maxterms)
+    answer = print_sop(sop)
+    options=[]
+    options.append(answer)
+    for i in range(3):
+        options.append(print_sop(gen_sop(minterm_to_table(manipulate_minterms(table), num), 1, char)))
+    random.shuffle(options)
+    idx = 'A'
+    new_options = []
+    for option in options:
+        new_option = idx+". "+str(option)
+        new_options.append(new_option)
+        idx = chr(ord(idx) + 1)
+    return question, new_options, answer
+
+
+def maxterm_to_pos(level):
+    if level==1:
+        num_vars = 3
+    else:
+        num_vars = random.randint(3,4)
+    table = gen_random_truth_table(num_vars)
+    char = get_starting_character(num_vars)
+    pos = gen_pos(table, 1, char)
+    minterms, num = table_to_minterms(table)
+    maxterms = []
+    for i in range(2**num_vars):
+        if i not in minterms:
+            maxterms.append(i)
+    question = "The POS for the given maxterms - {0} is?".format(maxterms)
+    answer = print_pos(pos)
+    options=[]
+    options.append(answer)
+    for i in range(3):
+        options.append(print_pos(gen_pos(minterm_to_table(manipulate_minterms(table), num), 1, char)))
     random.shuffle(options)
     idx = 'A'
     new_options = []
@@ -577,27 +820,29 @@ def minterm_to_pos():
 
 
 #evaluate the given expression 
-def evaluate():
-    num_vars=random.randint(3,4)
-    exp=gen_random_exp(num_vars)
+def evaluate(level):
+    if level==1:
+        num_vars=3
+    else:
+        num_vars=4
+    char = get_starting_character(num_vars)
+    exp=gen_random_exp(num_vars, 1, char)
     final_exp=print_exp(exp)
     mapy={}
-    mapy['A']=random.randint(0,1)
-    mapy['B']=random.randint(0,1)
-    mapy['C']=random.randint(0,1)
-    mapy['D']=random.randint(0,1)
+    mapy[char]=random.randint(0,1)
+    mapy[chr(ord(char)+1)]=random.randint(0,1)
+    mapy[chr(ord(char)+2)]=random.randint(0,1)
+    mapy[chr(ord(char)+3)]=random.randint(0,1)
     question="What does the expression {0} evaluate to, When ".format(final_exp)
     for i in range(num_vars):
         if(i==0):
-            question+="A={0} ".format(mapy['A'])
+            question+="{0}={1} ".format(char, mapy[char])
         elif(i==1):
-            question+="B={0} ".format(mapy['B'])
+            question+="{0}={1} ".format(chr(ord(char)+1), mapy[chr(ord(char)+1)])
         elif(i==2):
-            question+="C={0} ".format(mapy['C'])
+            question+="{0}={1} ".format(chr(ord(char)+2), mapy[chr(ord(char)+2)])
         elif(i==3):
-            question+="D={0} ".format(mapy['D'])
-    # question+="\n"
-
+            question+="{0}={1} ".format(chr(ord(char)+3), mapy[chr(ord(char)+3)])
     new_stack=[]
     for i, val in enumerate(exp):
         if isinstance(val, str):
@@ -607,7 +852,6 @@ def evaluate():
             if val.sign=="-":
                 x^=1
             new_stack.append(x)
-
     res=[]
     for val in new_stack:
         if val=="+" or val==".":
@@ -620,7 +864,6 @@ def evaluate():
             res.append(res_var)
         else:
             res.append(val)
-
     answer=res[0]
     options=['0', '1']
     random.shuffle(options)
@@ -633,17 +876,22 @@ def evaluate():
     return question, new_options, answer
 
 
-def simplify_exp_sop():
-    table = gen_random_truth_table(3)
-    question = "Minimize the given expression - {0}".format(print_sop(gen_sop(table)))
+def simplify_exp_sop(level):
+    if level==1:
+        num_vars = 3
+    else:
+        num_vars = random.randint(3,4)
+    table = gen_random_truth_table(num_vars)
+    char = get_starting_character(num_vars)
+    question = "Minimize the given expression - {0}\nThere are {1} variables".format(print_sop(gen_sop(table, 1, char)), num_vars)
     minterms, num_vars = table_to_minterms(table)
     options=[]
-    options.append(print_QM(manipulate_minterms(table), []))
-    options.append(print_QM(manipulate_minterms(table), manipulate_dc(table)))
-    options.append(print_QM(minterms, []))
-    options.append(print_QM_distract(minterms, []))
-    options.append(print_QM_distract(manipulate_minterms(table), manipulate_dc(table)))
-    answer=print_QM(minterms, [])
+    options.append(print_QM(manipulate_minterms(table), [], char))
+    options.append(print_QM(manipulate_minterms(table), manipulate_dc(table), char))
+    options.append(print_QM(minterms, [], char))
+    options.append(print_QM_distract(minterms, [], char))
+    options.append(print_QM_distract(manipulate_minterms(table), manipulate_dc(table), char))
+    answer=print_QM(minterms, [], char)
     random.shuffle(options)
     idx = 'A'
     new_options = []
@@ -654,17 +902,22 @@ def simplify_exp_sop():
     return question, new_options, answer
 
 
-def simplify_exp_pos():
-    table = gen_random_truth_table(3)
-    question = "Minimize the given expression - {0}".format(print_pos(gen_pos(table)))
+def simplify_exp_pos(level):
+    if level==1:
+        num_vars = 3
+    else:
+        num_vars = random.randint(3,4)
+    table = gen_random_truth_table(num_vars)
+    char = get_starting_character(num_vars)
+    question = "Minimize the given expression - {0}\nThere are {1} variables".format(print_pos(gen_pos(table, 1, char)), num_vars)
     minterms, num_vars = table_to_minterms(table)
     options=[]
-    options.append(print_QM(manipulate_minterms(table), []))
-    options.append(print_QM(manipulate_minterms(table), manipulate_dc(table)))
-    options.append(print_QM(minterms, []))
-    options.append(print_QM_distract(minterms, []))
-    options.append(print_QM_distract(manipulate_minterms(table), manipulate_dc(table)))
-    answer=print_QM(minterms, [])
+    options.append(print_QM(manipulate_minterms(table), [], char))
+    options.append(print_QM(manipulate_minterms(table), manipulate_dc(table), char))
+    options.append(print_QM(minterms, [], char))
+    options.append(print_QM_distract(minterms, [], char))
+    options.append(print_QM_distract(manipulate_minterms(table), manipulate_dc(table), char))
+    answer=print_QM(minterms, [], char)
     random.shuffle(options)
     idx = 'A'
     new_options = []
@@ -675,17 +928,52 @@ def simplify_exp_pos():
     return question, new_options, answer
 
 
-def simplify_exp_minterms():
-    table = gen_random_truth_table(3)
+def simplify_exp_minterms(level):
+    if level==1:
+        num_vars = 3
+    else:
+        num_vars = random.randint(3,4)
+    table = gen_random_truth_table(num_vars)
+    char = get_starting_character(num_vars)
     minterms, num_vars = table_to_minterms(table)
-    question = "Minimize the given expression - Minterms: {0}".format(minterms)
+    question = "Minimize the given expression - Minterms: {0}\nThere are {1} variables".format(minterms, num_vars)
     options=[]
-    options.append(print_QM(manipulate_minterms(table), []))
-    options.append(print_QM(manipulate_minterms(table), manipulate_dc(table)))
-    options.append(print_QM(minterms, []))
-    options.append(print_QM_distract(minterms, []))
-    options.append(print_QM_distract(manipulate_minterms(table), manipulate_dc(table)))
-    answer=print_QM(minterms, [])
+    options.append(print_QM(manipulate_minterms(table), [], char))
+    options.append(print_QM(manipulate_minterms(table), manipulate_dc(table), char))
+    options.append(print_QM(minterms, [], char))
+    options.append(print_QM_distract(minterms, [], char))
+    options.append(print_QM_distract(manipulate_minterms(table), manipulate_dc(table), char))
+    answer=print_QM(minterms, [], char)
+    random.shuffle(options)
+    idx = 'A'
+    new_options = []
+    for option in options:
+        new_option = idx+". "+str(option)
+        new_options.append(new_option)
+        idx = chr(ord(idx) + 1)
+    return question, new_options, answer
+
+
+def simplify_exp_maxterms(level):
+    if level==1:
+        num_vars = 3
+    else:
+        num_vars = random.randint(3,4)
+    table = gen_random_truth_table(num_vars)
+    char = get_starting_character(num_vars)
+    minterms, num_vars = table_to_minterms(table)
+    maxterms = []
+    for i in range(2**num_vars):
+        if i not in minterms:
+            maxterms.append(i)
+    question = "Minimize the given expression - Maxterms: {0}\nThere are {1} variables".format(maxterms, num_vars)
+    options=[]
+    options.append(print_QM(manipulate_minterms(table), [], char))
+    options.append(print_QM(manipulate_minterms(table), manipulate_dc(table), char))
+    options.append(print_QM(minterms, [], char))
+    options.append(print_QM_distract(minterms, [], char))
+    options.append(print_QM_distract(manipulate_minterms(table), manipulate_dc(table), char))
+    answer=print_QM(minterms, [], char)
     random.shuffle(options)
     idx = 'A'
     new_options = []
@@ -698,16 +986,22 @@ def simplify_exp_minterms():
 
 question_list={
     1: sop_to_minterm,
-    2: pos_to_minterm,
-    3: sop_to_pos,
-    4: pos_to_sop,
-    5: minterm_to_sop,
-    6: minterm_to_pos,
-    7: evaluate,
-    8: simplify_exp_sop,
-    9: simplify_exp_pos,
-    10: simplify_exp_minterms,
-    11 : sop_to_minterms2
+    2: sop_to_minterm2,
+    3: sop_to_maxterm,
+    4: sop_to_maxterm2,
+    5: pos_to_minterm,
+    6: pos_to_maxterm,
+    7: sop_to_pos,
+    8: pos_to_sop,
+    9: minterm_to_sop,
+    10: maxterm_to_sop,
+    11: minterm_to_pos,
+    12: maxterm_to_pos, 
+    13: evaluate,
+    14: simplify_exp_sop,
+    15: simplify_exp_pos,
+    16: simplify_exp_minterms,
+    17: simplify_exp_maxterms
 }
 
 
@@ -722,14 +1016,9 @@ def test():
 
 #final function needs to be combined with generator.py
 def generate_question_boolean_algebra(level):
-    q,o,a = question_list[random.randint(1,10)]()
+    q,o,a = question_list[random.randint(1,17)](level)
     return q,o,a
 
-# if __name__ == "__main__":
-#     ans = generate_question_boolean_algebra(1)
-#     print(ans)
-
-q,o,a = sop_to_minterms2()
-print(q)
-print(o)
-print(a)
+if __name__ == "__main__":
+    ans = generate_question_boolean_algebra(1)
+    print(ans)
