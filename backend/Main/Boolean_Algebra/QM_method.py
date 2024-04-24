@@ -133,6 +133,7 @@ def print_QM(mt, dc):
                 chart[j] = [i]
 
     EPI = findEPI(chart)
+    print(EPI)
     removeTerms(chart,EPI)
 
     if(len(chart) == 0):

@@ -124,6 +124,13 @@ def gen_pos(table):
             pos.append(prod)
     return pos
 
+def gen_sop_numbers(table):
+    num_vars = len(table[0])-1
+    sop = []
+    for i in range (len(table)):
+        if table[i][num_vars]==0:
+            sop.append(i)
+    return sop
 
 def print_sop(sop):
     output_buffer = io.StringIO()
@@ -144,7 +151,7 @@ def print_sop(sop):
     captured_output = output_buffer.getvalue()
     return captured_output
 
-print(print_sop(gen_sop(gen_random_truth_table(4))))
+# print(print_sop(gen_sop(gen_random_truth_table(4))))
 
 def print_pos(pos):
     output_buffer = io.StringIO()
@@ -448,6 +455,27 @@ def sop_to_minterm():
         idx = chr(ord(idx) + 1)
     return question, new_options, answer
 
+def sop_to_minterms2():
+    table = gen_random_truth_table(3)
+    sop = gen_sop_numbers(table)
+    minterms = table_to_minterms(table)
+    answer = minterms[0]
+    question = "What are the minterms for the given SOP form ?\n SOP = {0}".format(sop)
+    options=[]
+    while len(options)<3:
+        m=manipulate_dc(table)
+        if m:
+            options.append(m)
+    options.append(minterms[0])
+    random.shuffle(options)
+    idx = 'A'
+    new_options = []
+    for option in options:
+        new_option = idx+". "+str(option)
+        new_options.append(new_option)
+        idx = chr(ord(idx) + 1)
+    return question, new_options, answer
+
 def pos_to_minterm():
     table = gen_random_truth_table(3)
     pos = gen_pos(table)
@@ -679,6 +707,7 @@ question_list={
     8: simplify_exp_sop,
     9: simplify_exp_pos,
     10: simplify_exp_minterms,
+    11 : sop_to_minterms2
 }
 
 
@@ -696,6 +725,11 @@ def generate_question_boolean_algebra(level):
     q,o,a = question_list[random.randint(1,10)]()
     return q,o,a
 
-if __name__ == "__main__":
-    ans = generate_question_boolean_algebra(1)
-    print(ans)
+# if __name__ == "__main__":
+#     ans = generate_question_boolean_algebra(1)
+#     print(ans)
+
+q,o,a = sop_to_minterms2()
+print(q)
+print(o)
+print(a)
