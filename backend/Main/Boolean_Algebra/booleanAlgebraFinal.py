@@ -488,7 +488,7 @@ def sop_to_minterm(level):
     options=[]
     while len(options)<3:
         m=manipulate_dc(table)
-        if m not in options:
+        if m and m not in options:
             options.append(m)
     options.append(minterms[0])
     random.shuffle(options)
@@ -514,7 +514,7 @@ def sop_to_minterm2(level):
     options=[]
     while len(options)<3:
         m=manipulate_dc(table)
-        if m not in options:
+        if m and m not in options:
             options.append(m)
     options.append(minterms[0])
     char = get_starting_character(num_vars)
@@ -545,7 +545,7 @@ def sop_to_maxterm(level):
     options=[]
     while len(options)<3:
         m=manipulate_dc(table)
-        if m not in options:
+        if m and m not in options:
             options.append(m)
     options.append(minterms[0])
     options2 = []
@@ -583,7 +583,7 @@ def sop_to_maxterm2(level):
     options=[]
     while len(options)<3:
         m=manipulate_dc(table)
-        if m not in options:
+        if m and m not in options:
             options.append(m)
     options.append(minterms[0])
     options2 = []
@@ -625,7 +625,7 @@ def pos_to_minterm(level):
     options=[]
     while len(options)<3:
         m=manipulate_dc(table)
-        if m not in options:
+        if m and m not in options:
             options.append(m)
     options.append(minterms[0])
     random.shuffle(options)
@@ -651,7 +651,7 @@ def pos_to_maxterm(level):
     options=[]
     while len(options)<3:
         m=manipulate_dc(table)
-        if m not in options:
+        if m and m not in options:
             options.append(m)
     options.append(minterms[0])
     options2 = []
@@ -689,11 +689,11 @@ def sop_to_pos(level):
     question = "Convert the expression {0} to POS form".format(print_sop(sop))
     answer = print_pos(pos)
     options=[]
-    options.append(answer)
     while len(options)<3:
         x=print_pos(gen_pos(minterm_to_table(manipulate_minterms(table), num), 1, char))
         if x not in options:
             options.append(x)
+    options.append(answer)
     random.shuffle(options)
     idx = 'A'
     new_options = []
@@ -718,7 +718,7 @@ def pos_to_sop(level):
     answer = print_sop(sop)
     options=[]
     options.append(answer)
-    while len(options)<3:
+    while len(options)<4:
         x=print_pos(gen_pos(minterm_to_table(manipulate_minterms(table), num), 1, char))
         if x not in options:
             options.append(x)
@@ -745,7 +745,7 @@ def minterm_to_sop(level):
     answer = print_sop(sop)
     options=[]
     options.append(answer)
-    while len(options)<3:
+    while len(options)<4:
         x=print_pos(gen_pos(minterm_to_table(manipulate_minterms(table), num), 1, char))
         if x not in options:
             options.append(x)
@@ -772,7 +772,7 @@ def minterm_to_pos(level):
     answer = print_pos(pos)
     options=[]
     options.append(answer)
-    while len(options)<3:
+    while len(options)<4:
         x=print_pos(gen_pos(minterm_to_table(manipulate_minterms(table), num), 1, char))
         if x not in options:
             options.append(x)
@@ -803,7 +803,7 @@ def maxterm_to_sop(level):
     answer = print_sop(sop)
     options=[]
     options.append(answer)
-    while len(options)<3:
+    while len(options)<4:
         x=print_pos(gen_pos(minterm_to_table(manipulate_minterms(table), num), 1, char))
         if x not in options:
             options.append(x)
@@ -834,7 +834,7 @@ def maxterm_to_pos(level):
     answer = print_pos(pos)
     options=[]
     options.append(answer)
-    while len(options)<3:
+    while len(options)<4:
         x=print_pos(gen_pos(minterm_to_table(manipulate_minterms(table), num), 1, char))
         if x not in options:
             options.append(x)
@@ -894,7 +894,7 @@ def evaluate(level):
         else:
             res.append(val)
     answer=res[0]
-    options=['0', '1']
+    options=['0', '1', 'Can\'t Say', 'Depends upon the variables']
     random.shuffle(options)
     idx = 'A'
     new_options = []
