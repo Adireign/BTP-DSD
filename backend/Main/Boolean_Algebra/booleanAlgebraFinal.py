@@ -33,9 +33,9 @@ def gen_random_exp(num_vars, flag, char): #generating in postfix
     stack=[]
     st_vars=0
     st_op=0
-    probab=4 # probability of extending literals in the term
+    probab=2 # probability of extending literals in the term
     while True:
-        if limit>0 and random.randint(1,10)<probab:
+        if limit>0 and random.randint(1,2)<probab:
             limit-=1
             random_index=random.randint(0, len(vars)-1)
             stack.append(vars[random_index])
@@ -904,6 +904,87 @@ def evaluate(level):
         idx = chr(ord(idx) + 1)
     return question, new_options, answer
 
+def evaluate_2(level):
+    if level==1:
+        num_vars=3
+    else:
+        num_vars=4
+    char = get_starting_character(num_vars)
+    exp=gen_random_exp(num_vars, 1, char)
+    final_exp=print_exp(exp)
+    mapy={}
+    for i in range(num_vars-1): 
+        mapy[chr(ord(char)+i)]=random.randint(0,1)
+    mapy[chr(ord(char)+num_vars-1)]=0
+    new_stack=[]
+    for i, val in enumerate(exp):
+        if isinstance(val, str):
+            new_stack.append(val)
+        else:
+            x=mapy[val.symbol]
+            if val.sign=="-":
+                x^=1
+            new_stack.append(x)
+    res=[]
+    for val in new_stack:
+        if val=="+" or val==".":
+            v1=res.pop()
+            v2=res.pop()
+            if(val=="+"):
+                res_var=v1|v2
+            else:
+                res_var=v1&v2
+            res.append(res_var)
+        else:
+            res.append(val)
+    zero_val=res[0]
+    mapy[chr(ord(char)+num_vars-1)]=1
+    new_stack=[]
+    for i, val in enumerate(exp):
+        if isinstance(val, str):
+            new_stack.append(val)
+        else:
+            x=mapy[val.symbol]
+            if val.sign=="-":
+                x^=1
+            new_stack.append(x)
+    res=[]
+    for val in new_stack:
+        if val=="+" or val==".":
+            v1=res.pop()
+            v2=res.pop()
+            if(val=="+"):
+                res_var=v1|v2
+            else:
+                res_var=v1&v2
+            res.append(res_var)
+        else:
+            res.append(val)
+    one_val=res[0]
+
+    if zero_val==0 and one_val==0:
+        answer='0'
+    elif zero_val==1 and one_val==1:
+        answer='1'
+    elif zero_val==0 and one_val==1:
+        answer='{0}'.format(chr(ord(char)+num_vars-1))
+    else:
+        answer='{0}\''.format(chr(ord(char)+num_vars-1))
+
+    question="What does the expression {0} evaluate to, When ".format(final_exp)
+    for i in range(num_vars-1):
+        question+="{0}={1} ".format(chr(ord(char)+i), mapy[chr(ord(char)+i)])
+
+    options=['0', '1', '{0}'.format(chr(ord(char)+num_vars-1)), '{0}\''.format(chr(ord(char)+num_vars-1))]
+    random.shuffle(options)
+    idx = 'A'
+    new_options = []
+    for option in options:
+        new_option = idx+". "+str(option)
+        new_options.append(new_option)
+        idx = chr(ord(idx) + 1)
+    return question, new_options, answer
+
 
 def simplify_exp_sop(level):
     if level==1:
@@ -1112,10 +1193,11 @@ question_list={
     11: minterm_to_pos,
     12: maxterm_to_pos, 
     13: evaluate,
-    14: simplify_exp_sop,
-    15: simplify_exp_pos,
-    16: simplify_exp_minterms,
-    17: simplify_exp_maxterms
+    14: evaluate_2,
+    15: simplify_exp_sop,
+    16: simplify_exp_pos,
+    17: simplify_exp_minterms,
+    18: simplify_exp_maxterms
 }
 
 
@@ -1133,12 +1215,6 @@ def generate_question_boolean_algebra(level):
     q,o,a = question_list[random.randint(1,17)](level)
     return q,o,a
 
-q,o,a= sop_to_minterm(1)
-print(q)
-print(o)
-print(a)
-
-
-# if __name__ == "__main__":
-#     ans = generate_question_boolean_algebra(1)
-#     print(ans)
+if __name__ == "__main__":
+    ans = generate_question_boolean_algebra(1)
+    print(ans)
